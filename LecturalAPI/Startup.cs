@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using AutoMapper;
 namespace LecturalAPI
 {
     public class Startup
@@ -36,6 +36,7 @@ namespace LecturalAPI
             services.AddDbContextPool<AppdbContext>(opts =>
                 opts.UseSqlServer("server = (localDB)\\MSSQLLocalDB; database=WebDepartment; Trusted_Connection = true")
             );
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddMvc(option => option.EnableEndpointRouting = false);
