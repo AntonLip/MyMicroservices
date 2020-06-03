@@ -1,4 +1,7 @@
-﻿using LecturalAPI.Models;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using LecturalAPI.Models;
+using LecturalAPI.Models.dataBaseModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,9 +14,171 @@ namespace LecturalAPI.Services
     public class GroupSerice
     {
         private readonly AppdbContext _context;
-        public async Task<IEnumerable<GroupDB>> GetAllGroupsAsync()
+        private readonly IConfigurationProvider configuration;
+
+        public GroupSerice(AppdbContext context)
         {
-            return await _context.GroupDB.ToListAsync();
+            _context = context;
+            configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<GroupDB, GroupDTO>();
+            }
+            );
+
+        }
+
+        public async Task<List<GroupDTO>> GetAllGroupsAsync()
+        {
+
+            var grups = await _context.Group.Include(c => c.ProfessionDB).Include(c => c.SpecializationDB).ToListAsync();
+
+
+            List<GroupDTO> groupsDTO = new List<GroupDTO>();
+            foreach (var g in grups)
+            {
+                groupsDTO.Add(new GroupDTO
+                {
+                    id = g.id,
+                    nameOfSpecialization = g.SpecializationDB.SpecializationCode,
+                    ProfessionLastName = g.ProfessionDB.nameOfProffession,
+                    CountCadets = g.CountCadets,
+                    numberOfGroup = g.numberOfGroup,
+                    info = g.info
+                });
+            }
+            return groupsDTO;
+        }
+
+
+        public async Task<GroupDTO> GetGroupByIdAsync(Guid id)
+        {
+            var grups = await _context.Group.Where(c => c.id == id).Include(c => c.ProfessionDB).Include(c => c.SpecializationDB).FirstOrDefaultAsync();
+            GroupDTO groupsDTO = new GroupDTO();
+
+            groupsDTO.id = grups.id;
+            groupsDTO.nameOfSpecialization = grups.SpecializationDB.SpecializationCode;
+            groupsDTO.ProfessionLastName = grups.ProfessionDB.nameOfProffession;
+            groupsDTO.CountCadets = grups.CountCadets;
+            groupsDTO.numberOfGroup = grups.numberOfGroup;
+            groupsDTO.info = grups.info;
+            return groupsDTO;
+        }
+
+
+        public async Task<GroupDTO> UpdateGroupAsync(Guid id, GroupDTO groupDTO)
+        {
+            var grups = await _context.Group.Where(c => c.id == id).Include(c => c.ProfessionDB).Include(c => c.SpecializationDB).FirstOrDefaultAsync();
+
+            if (grups == null || grups.id != id)
+            {
+                return null;
+            }
+
+            grups.id = grups.id;
+            grups.numberOfGroup = groupDTO.numberOfGroup;
+            grups.info = groupDTO.info;
+            grups.CountCadets = groupDTO.CountCadets;
+
+            if (groupDTO.nameOfSpecialization != grups.SpecializationDB.nameOfSpecialization)
+            {
+                SpecializationDB spec = _context.Specialization.Where(c => c.nameOfSpecialization == groupDTO.nameOfSpecialization).FirstOrDefault();
+                grups.SpecializationDB = spec;
+                grups.ProfessionDBid = spec.id;
+            }
+            if (groupDTO.ProfessionLastName != grups.ProfessionDB.nameOfProffession)
+            {
+                ProfessionDB prof = _context.Profession.Where(c => c.nameOfProffession == groupDTO.ProfessionLastName).FirstOrDefault();
+                grups.ProfessionDB = prof;
+                grups.ProfessionDBid = prof.id;
+            }
+
+            _context.Entry(grups).State = EntityState.Modified;
+            try
+            {
+
+                await _context.SaveChangesAsync();
+                return groupDTO;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GroupDBExists(id))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        public async Task<GroupDTO> AddGroupAsync(GroupDTO groupDTO)
+        {
+            SpecializationDB spec = _context.Specialization.Where(c => c.nameOfSpecialization == groupDTO.nameOfSpecialization).FirstOrDefault();
+            ProfessionDB prof = _context.Profession.Where(c => c.nameOfProffession == groupDTO.ProfessionLastName).FirstOrDefault();
+
+            if (spec == null || prof == null)
+            {
+                return null;
+            }
+
+
+            GroupDB group = new GroupDB
+            {
+                id = groupDTO.id,
+                info = groupDTO.info,
+                SpecializationDB = spec,
+                ProfessionDB = prof,
+                CountCadets = groupDTO.CountCadets,
+                numberOfGroup = groupDTO.numberOfGroup,
+                ProfessionDBid = prof.id,
+                SpecializationDBid = spec.id
+            };
+            try
+            {
+                _context.Group.Add(group);
+                await _context.SaveChangesAsync();
+                return groupDTO;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GroupDBExists(group.id))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        public async Task<GroupDTO> DeleteGroupAsync(Guid id)
+        {
+
+            var g = await _context.Group.Where(c => c.id == id).Include(c => c.ProfessionDB).Include(c => c.SpecializationDB).FirstOrDefaultAsync();
+            if (g == null || g.id != id)
+            {
+                return null;
+            }
+
+            GroupDTO groupDTO = new GroupDTO
+            {
+                id = g.id,
+                nameOfSpecialization = g.SpecializationDB.SpecializationCode,
+                ProfessionLastName = g.ProfessionDB.nameOfProffession,
+                CountCadets = g.CountCadets,
+                numberOfGroup = g.numberOfGroup,
+                info = g.info
+            };
+            _context.Group.Remove(g);
+            await _context.SaveChangesAsync();
+            return groupDTO;
+        }
+
+        private bool GroupDBExists(Guid id)
+        {
+            return _context.Group.Any(e => e.id == id);
         }
 
     }

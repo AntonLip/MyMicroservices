@@ -13,5 +13,8 @@ namespace LecturalAPI.Models.dataBaseModel
         public string SpecializationCode { get; set; }
         public string nameOfSpecialization { get; set; }
         public string info { get; set; }
+
+
+        public List<GroupDB> GroupDB { get; set; }
     }
 }

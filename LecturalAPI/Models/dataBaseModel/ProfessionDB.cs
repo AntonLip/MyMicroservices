@@ -13,5 +13,9 @@ namespace LecturalAPI.Models.dataBaseModel
         public string proffesionCode{ get; set; }
         public string nameOfProffession { get; set; }
         public string info { get; set; }
+
+
+
+        public List<GroupDB> GroupDB { get; set; }
     }
 }
