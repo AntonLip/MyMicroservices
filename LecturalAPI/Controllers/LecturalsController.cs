@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LecturalAPI.Models;
+using LecturalAPI.Services;
+using LecturalAPI.Models.dataTransferModel;
 
 namespace LecturalAPI.Controllers
 {
@@ -14,25 +16,27 @@ namespace LecturalAPI.Controllers
     public class LecturalsController : ControllerBase
     {
         private readonly AppdbContext _context;
-
+        private readonly LecturalService _lecturalService;
         public LecturalsController(AppdbContext context)
         {
-            _context = context;
+            //_context = context;
+            _lecturalService = new LecturalService(context);
         }
 
         // GET: api/Lecturals
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Lectural>>> GetLectural(int Page = 0, int pageSizeCount = 5)
+        public async Task<ActionResult<IEnumerable<LecturalDTO>>> GetLectural(int Page = 0, int pageSizeCount = 5)
         {
             //return await _context.Lectural.ToListAsync();
-            return await _context.Lectural.Skip(Page * pageSizeCount).Take(pageSizeCount).ToListAsync();
+            //return await _context.Lectural.Skip(Page * pageSizeCount).Take(pageSizeCount).ToListAsync();
+            return await _lecturalService.GetAllLecturalAsync(Page, pageSizeCount);
         }
 
         // GET: api/Lecturals/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Lectural>> GetLectural(Guid id)
+        public async Task<ActionResult<LecturalDTO>> GetLectural(Guid id)
         {
-            var lectural = await _context.Lectural.FindAsync(id);
+            var lectural = await _lecturalService.GetLecturalByIdAsync(id);
 
             if (lectural == null)
             {
@@ -46,32 +50,20 @@ namespace LecturalAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLectural(Guid id, Lectural lectural)
+        public async Task<IActionResult> PutLectural(Guid id, LecturalDTO lecturalDTO)
         {
-            if (id != lectural.id)
+            if (id != lecturalDTO.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(lectural).State = EntityState.Modified;
-
-            try
+            LecturalDTO lectural = await _lecturalService.UpdateLecturalAsync(id, lecturalDTO);
+            if (lectural != null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LecturalExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return CreatedAtAction("GetLectural", new { id = lectural.id }, lectural);
             }
 
-            return NoContent();
+            return NotFound();
         }
 
         // POST: api/Lecturals
@@ -88,23 +80,16 @@ namespace LecturalAPI.Controllers
 
         // DELETE: api/Lecturals/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Lectural>> DeleteLectural(Guid id)
+        public async Task<ActionResult<LecturalDTO>> DeleteLectural(Guid id)
         {
-            var lectural = await _context.Lectural.FindAsync(id);
+            var lectural = await _lecturalService.DeleteLectureAsync(id);
             if (lectural == null)
             {
                 return NotFound();
             }
-
-            _context.Lectural.Remove(lectural);
-            await _context.SaveChangesAsync();
-
             return lectural;
         }
 
-        private bool LecturalExists(Guid id)
-        {
-            return _context.Lectural.Any(e => e.id == id);
-        }
+       
     }
 }

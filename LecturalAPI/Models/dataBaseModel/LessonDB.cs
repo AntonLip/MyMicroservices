@@ -13,12 +13,16 @@ namespace LecturalAPI.Models.dataBaseModel
         public string name { get; set; }
         public string sectionName { get; set; }
         public string themeName { get; set; }
-        public Guid idLectural { get; set; }
-        public Guid idDiciplines { get; set; }
-        public Guid idLessonType { get; set; }
-        public int numberOfDiciplines { get; set; }
         public int countHours { get; set; }
+        public string InfoForLectural { get; set; }
+        public string infoForCadets { get; set; }
+        public int auditoreNumber { get; set; }
+        public string infoForEngeneer { get; set; }
+        public DateTime dateofLesson { get; set; }
 
-        public string Info { get; set; }
+
+        public LessonTypeDB LessonTypeDB { get; set; }
+        public Lectural Lectural { get; set; }
+        public DisciplineDB Discipline { get; set; }
     }
 }

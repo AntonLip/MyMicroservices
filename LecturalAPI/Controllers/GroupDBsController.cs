@@ -28,8 +28,7 @@ namespace LecturalAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GroupDTO>>> GetGroupDB()
         {
-            List<GroupDTO> retValue = await _groupSerice.GetAllGroupsAsync();
-            return retValue;
+            return await _groupSerice.GetAllGroupsAsync();           
         }
 
         //// GET: api/GroupDBs/5

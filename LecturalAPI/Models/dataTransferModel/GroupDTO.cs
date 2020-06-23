@@ -7,11 +7,22 @@ namespace LecturalAPI.Models
 {
     public class GroupDTO
     {
+
         public Guid id { get; set; }
         public string ProfessionLastName { get; set; }
         public string nameOfSpecialization { get; set; }
         public int numberOfGroup { get; set; }
         public int CountCadets { get; set; }
         public string info { get; set; }
+
+        public void GroupDBtoGroupDTO(GroupDB groupDB) 
+        {
+            this.id = groupDB.id;
+            this.nameOfSpecialization = groupDB.SpecializationDB.SpecializationCode;
+            this.ProfessionLastName = groupDB.ProfessionDB.nameOfProffession;
+            this.CountCadets = groupDB.CountCadets;
+            this.numberOfGroup = groupDB.numberOfGroup;
+            this.info = groupDB.info;
+        }
     }
 }

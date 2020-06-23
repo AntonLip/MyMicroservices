@@ -11,6 +11,18 @@
     <Compile Remove="Migrations\20200602163908_ChangeDependency.Designer.cs" />
     <Compile Remove="Migrations\20200602164117_XZ.cs" />
     <Compile Remove="Migrations\20200602164117_XZ.Designer.cs" />
+    <Compile Remove="Migrations\20200605075516_ChangeCadets.cs" />
+    <Compile Remove="Migrations\20200605075516_ChangeCadets.Designer.cs" />
+    <Compile Remove="Migrations\20200605080348_ChangeCadets1.cs" />
+    <Compile Remove="Migrations\20200605080348_ChangeCadets1.Designer.cs" />
+    <Compile Remove="Migrations\20200605080936_DelCadets.cs" />
+    <Compile Remove="Migrations\20200605080936_DelCadets.Designer.cs" />
+    <Compile Remove="Migrations\20200605081551_ChangeCadets.cs" />
+    <Compile Remove="Migrations\20200605081551_ChangeCadets.Designer.cs" />
+    <Compile Remove="Migrations\20200605091459_NewCadets.cs" />
+    <Compile Remove="Migrations\20200605091459_NewCadets.Designer.cs" />
+    <Compile Remove="Migrations\20200605091732_NewCadets.cs" />
+    <Compile Remove="Migrations\20200605091732_NewCadets.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

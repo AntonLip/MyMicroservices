@@ -6,11 +6,31 @@ using System.Threading.Tasks;
 
 namespace LecturalAPI.Models
 {
-    public class CadetDB:Iman
+    public class CadetDB
     {
+        public CadetDB(GroupDB gr, Cadet cadet)
+        {
+            id = cadet.id;
+            GroupDBid = gr.id;
+            GroupDB = gr;
+            lastName = cadet.lastName;
+            middleName = cadet.middleName;
+            firstName = cadet.firstName;
+            birthDay = cadet.birthDay;
+            pathPhotoBig = cadet.pathPhotoBig;
+            pathPhotoSmall = cadet.pathPhotoSmall;
+            Position = cadet.Position;
+            dateOfStartService = cadet.dateOfStartService;
+            isMarried = cadet.isMarried;
+            militaryRank = cadet.militaryRank;
+            info = cadet.info;
+        }
+        public CadetDB()
+        { }
         [Key]
         public Guid id { get; set; }
-        public Guid idGrup { get; set; }
+        public Guid GroupDBid { get; set; }
+        public GroupDB GroupDB { get; set; }
         public string lastName { get; set; }
         public string firstName { get; set; }
         public string middleName { get; set; }

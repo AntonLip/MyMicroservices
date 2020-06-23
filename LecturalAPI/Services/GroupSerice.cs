@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using LecturalAPI.Models;
 using LecturalAPI.Models.dataBaseModel;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -36,15 +34,9 @@ namespace LecturalAPI.Services
             List<GroupDTO> groupsDTO = new List<GroupDTO>();
             foreach (var g in grups)
             {
-                groupsDTO.Add(new GroupDTO
-                {
-                    id = g.id,
-                    nameOfSpecialization = g.SpecializationDB.SpecializationCode,
-                    ProfessionLastName = g.ProfessionDB.nameOfProffession,
-                    CountCadets = g.CountCadets,
-                    numberOfGroup = g.numberOfGroup,
-                    info = g.info
-                });
+                GroupDTO groupDTO = new GroupDTO();
+                groupDTO.GroupDBtoGroupDTO(g);
+                groupsDTO.Add(groupDTO);
             }
             return groupsDTO;
         }
@@ -54,20 +46,17 @@ namespace LecturalAPI.Services
         {
             var grups = await _context.Group.Where(c => c.id == id).Include(c => c.ProfessionDB).Include(c => c.SpecializationDB).FirstOrDefaultAsync();
             GroupDTO groupsDTO = new GroupDTO();
-
-            groupsDTO.id = grups.id;
-            groupsDTO.nameOfSpecialization = grups.SpecializationDB.SpecializationCode;
-            groupsDTO.ProfessionLastName = grups.ProfessionDB.nameOfProffession;
-            groupsDTO.CountCadets = grups.CountCadets;
-            groupsDTO.numberOfGroup = grups.numberOfGroup;
-            groupsDTO.info = grups.info;
+            groupsDTO.GroupDBtoGroupDTO(grups);
             return groupsDTO;
         }
 
 
         public async Task<GroupDTO> UpdateGroupAsync(Guid id, GroupDTO groupDTO)
         {
-            var grups = await _context.Group.Where(c => c.id == id).Include(c => c.ProfessionDB).Include(c => c.SpecializationDB).FirstOrDefaultAsync();
+            var grups = await _context.Group.Where(c => c.id == id)
+                                            .Include(c => c.ProfessionDB)
+                                            .Include(c => c.SpecializationDB)
+                                            .FirstOrDefaultAsync();
 
             if (grups == null || grups.id != id)
             {
@@ -79,7 +68,7 @@ namespace LecturalAPI.Services
             grups.info = groupDTO.info;
             grups.CountCadets = groupDTO.CountCadets;
 
-            if (groupDTO.nameOfSpecialization != grups.SpecializationDB.nameOfSpecialization)
+            if (groupDTO.nameOfSpecialization != grups.SpecializationDB.SpecializationCode)
             {
                 SpecializationDB spec = _context.Specialization.Where(c => c.nameOfSpecialization == groupDTO.nameOfSpecialization).FirstOrDefault();
                 grups.SpecializationDB = spec;
@@ -95,7 +84,6 @@ namespace LecturalAPI.Services
             _context.Entry(grups).State = EntityState.Modified;
             try
             {
-
                 await _context.SaveChangesAsync();
                 return groupDTO;
             }
@@ -114,8 +102,10 @@ namespace LecturalAPI.Services
 
         public async Task<GroupDTO> AddGroupAsync(GroupDTO groupDTO)
         {
-            SpecializationDB spec = _context.Specialization.Where(c => c.nameOfSpecialization == groupDTO.nameOfSpecialization).FirstOrDefault();
-            ProfessionDB prof = _context.Profession.Where(c => c.nameOfProffession == groupDTO.ProfessionLastName).FirstOrDefault();
+            SpecializationDB spec = _context.Specialization.Where(c => c.nameOfSpecialization == groupDTO.nameOfSpecialization)
+                                                           .FirstOrDefault();
+            ProfessionDB prof = _context.Profession.Where(c => c.nameOfProffession == groupDTO.ProfessionLastName)
+                                                   .FirstOrDefault();
 
             if (spec == null || prof == null)
             {

@@ -18,10 +18,13 @@ namespace LecturalAPI.Models
         public SpecializationDB SpecializationDB { get; set; }
 
         public Guid ProfessionDBid { get; set; }
+
         public Guid SpecializationDBid { get; set; }
         public int numberOfGroup { get; set; }
         public int CountCadets { get; set; }
         public string info { get; set; }
 
+
+        public List<CadetDB> CadetDB { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20200617161553_NewDataLecturalAndSomeClasses")]
+    partial class NewDataLecturalAndSomeClasses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,12 +76,6 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("GroupDBid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("Lecturalid")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Semester")
                         .HasColumnType("int");
 
@@ -131,6 +127,15 @@ namespace LecturalAPI.Migrations
                     b.Property<DateTime>("dateOfPlan")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("idLectural")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("idProfession")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("idSpecialization")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("isExam")
                         .HasColumnType("bit");
 
@@ -138,10 +143,6 @@ namespace LecturalAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("GroupDBid");
-
-                    b.HasIndex("Lecturalid");
 
                     b.ToTable("Discipline");
                 });
@@ -294,35 +295,26 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("Disciplineid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("InfoForLectural")
+                    b.Property<string>("Info")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("Lecturalid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("LessonTypeDBid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("auditoreNumber")
-                        .HasColumnType("int");
 
                     b.Property<int>("countHours")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("dateofLesson")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("idDiciplines")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("infoForCadets")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("idLectural")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("infoForEngeneer")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("idLessonType")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("numberOfDiciplines")
+                        .HasColumnType("int");
 
                     b.Property<string>("sectionName")
                         .HasColumnType("nvarchar(max)");
@@ -331,12 +323,6 @@ namespace LecturalAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("Disciplineid");
-
-                    b.HasIndex("Lecturalid");
-
-                    b.HasIndex("LessonTypeDBid");
 
                     b.ToTable("Lesson");
                 });
@@ -421,17 +407,6 @@ namespace LecturalAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LecturalAPI.Models.DisciplineDB", b =>
-                {
-                    b.HasOne("LecturalAPI.Models.GroupDB", "GroupDB")
-                        .WithMany()
-                        .HasForeignKey("GroupDBid");
-
-                    b.HasOne("LecturalAPI.Models.Lectural", null)
-                        .WithMany("DisciplineDB")
-                        .HasForeignKey("Lecturalid");
-                });
-
             modelBuilder.Entity("LecturalAPI.Models.GroupDB", b =>
                 {
                     b.HasOne("LecturalAPI.Models.dataBaseModel.ProfessionDB", "ProfessionDB")
@@ -464,21 +439,6 @@ namespace LecturalAPI.Migrations
                     b.HasOne("LecturalAPI.Models.dataBaseModel.Position", "Position")
                         .WithMany()
                         .HasForeignKey("Positionid");
-                });
-
-            modelBuilder.Entity("LecturalAPI.Models.dataBaseModel.LessonDB", b =>
-                {
-                    b.HasOne("LecturalAPI.Models.DisciplineDB", "Discipline")
-                        .WithMany("lessonDBs")
-                        .HasForeignKey("Disciplineid");
-
-                    b.HasOne("LecturalAPI.Models.Lectural", "Lectural")
-                        .WithMany("LessonDBs")
-                        .HasForeignKey("Lecturalid");
-
-                    b.HasOne("LecturalAPI.Models.LessonTypeDB", "LessonTypeDB")
-                        .WithMany("lessonDbs")
-                        .HasForeignKey("LessonTypeDBid");
                 });
 #pragma warning restore 612, 618
         }

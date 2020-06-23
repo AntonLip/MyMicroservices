@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LecturalAPI.Models.dataBaseModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace LecturalAPI.Models
         public Guid id { get; set; }
         public string nameOfType { get; set; }
         public string info { get; set; }
+
+        public List<LessonDB> lessonDbs { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20200622112437_ChangeCadetsLessonLectural")]
+    partial class ChangeCadetsLessonLectural
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,9 +79,6 @@ namespace LecturalAPI.Migrations
                     b.Property<Guid?>("GroupDBid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("Lecturalid")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Semester")
                         .HasColumnType("int");
 
@@ -131,6 +130,9 @@ namespace LecturalAPI.Migrations
                     b.Property<DateTime>("dateOfPlan")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("idLectural")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("isExam")
                         .HasColumnType("bit");
 
@@ -140,8 +142,6 @@ namespace LecturalAPI.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("GroupDBid");
-
-                    b.HasIndex("Lecturalid");
 
                     b.ToTable("Discipline");
                 });
@@ -312,9 +312,6 @@ namespace LecturalAPI.Migrations
                     b.Property<int>("countHours")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("dateofLesson")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("infoForCadets")
                         .HasColumnType("nvarchar(max)");
 
@@ -426,10 +423,6 @@ namespace LecturalAPI.Migrations
                     b.HasOne("LecturalAPI.Models.GroupDB", "GroupDB")
                         .WithMany()
                         .HasForeignKey("GroupDBid");
-
-                    b.HasOne("LecturalAPI.Models.Lectural", null)
-                        .WithMany("DisciplineDB")
-                        .HasForeignKey("Lecturalid");
                 });
 
             modelBuilder.Entity("LecturalAPI.Models.GroupDB", b =>
