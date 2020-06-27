@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using LecturalAPI.Models;
 using LecturalAPI.Services;
 using LecturalAPI.Models.dataTransferModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LecturalAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LecturalsController : ControllerBase
     {
         private readonly AppdbContext _context;

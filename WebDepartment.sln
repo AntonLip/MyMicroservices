@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LecturalAPI", "LecturalAPI\LecturalAPI.csproj", "{8FBF4EC9-5FA7-4EC5-A066-20E007BF0475}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentitySerrver4", "IdentitySerrver4\IdentitySerrver4.csproj", "{F6D860E2-FB8F-4B02-9870-84024F5DC1EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentitySerrver4", "IdentitySerrver4\IdentitySerrver4.csproj", "{F6D860E2-FB8F-4B02-9870-84024F5DC1EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientIdentity", "ClientIdentity\ClientIdentity.csproj", "{FE818BA7-EEE0-4065-BCE2-DDF382B5A2F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F6D860E2-FB8F-4B02-9870-84024F5DC1EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6D860E2-FB8F-4B02-9870-84024F5DC1EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6D860E2-FB8F-4B02-9870-84024F5DC1EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE818BA7-EEE0-4065-BCE2-DDF382B5A2F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE818BA7-EEE0-4065-BCE2-DDF382B5A2F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE818BA7-EEE0-4065-BCE2-DDF382B5A2F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE818BA7-EEE0-4065-BCE2-DDF382B5A2F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
