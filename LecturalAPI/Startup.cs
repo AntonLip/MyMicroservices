@@ -37,19 +37,17 @@ namespace LecturalAPI
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddMvc(option => option.EnableEndpointRouting = false);
 
             services.AddAuthentication("Bearer")
-             .AddJwtBearer("Bearer", options =>
-             {
-                 options.Authority = "https://localhost:5001";
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = "https://localhost:5001";
 
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateAudience = false
-                 };
-             });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false
+                };
+            });
 
             services.AddAuthorization(options =>
             {
@@ -59,6 +57,18 @@ namespace LecturalAPI
                     policy.RequireClaim("scope", "api1");
                 });
             });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(option => option.EnableEndpointRouting = false);
+
+            //services.AddAuthentication("Bearer")
+            //    .AddIdentityServerAuthentication(options =>
+            //    {
+            //        options.Authority = "http://localhost:5001";
+            //        options.RequireHttpsMetadata = false;
+            //        options.ApiName = "api1";
+            //    });
+           
 
         }
 
@@ -73,20 +83,21 @@ namespace LecturalAPI
             app.UseCors("MyPolicy");
            // app.UseRouting();
             app.UseMvc();
+
             app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
 
             //app.UseHttpsRedirection();
 
-            app.UseRouting();
+            //app.UseRouting();
 
             //app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute()
-                    .RequireAuthorization();
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapDefaultControllerRoute()
+            //        .RequireAuthorization();
+            //});
 
         }
     }

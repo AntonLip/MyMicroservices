@@ -21,7 +21,8 @@ namespace IdentitySerrver4
         public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
-            new ApiScope("api1", "My API")
+            new ApiScope("api1", "My API"),
+            new ApiScope("api2", "Their Api")
         };
         public static IEnumerable<ApiResource> GetAllApiRespurces()
         {
@@ -65,13 +66,13 @@ namespace IdentitySerrver4
                 },
                 new Client
                 {
-                    ClientId = "ro.client",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    ClientId = "whether.client",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
                     {
-                    new Secret("secret".Sha256())
+                    new Secret("secret1".Sha256())
                     },
-                    AllowedScopes = {  "Customers.api"  }
+                    AllowedScopes = { "api2" }
                 }
             };
          }

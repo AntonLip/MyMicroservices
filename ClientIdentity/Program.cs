@@ -23,30 +23,50 @@ namespace ClientIdentity
             {
                 Address = disco.TokenEndpoint,
 
-                ClientId = "client",
-                ClientSecret = "secret",
-                Scope = "api1"
-            });
+                ClientId = "whether.client",
+                ClientSecret = "secret1",
+                Scope = "api2"
 
+            });
             if (tokenResponse.IsError)
             {
                 Console.WriteLine(tokenResponse.Error);
                 return;
             }
-
-            Console.WriteLine(tokenResponse.Json);
-
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:44351/api/Lecturals");
-            if (!response.IsSuccessStatusCode)
+            var response = await apiClient.GetAsync("https://localhost:44355/weatherforecast");
+            Console.WriteLine(response.StatusCode);
+
+
+            var tokenResponseLectural = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
-                Console.WriteLine(response.StatusCode);
+                Address = disco.TokenEndpoint,
+                ClientId = "client",
+                ClientSecret = "secret",
+                Scope = "api1"
+            });
+            if (tokenResponseLectural.IsError)
+            {
+                Console.WriteLine(tokenResponseLectural.Error);
+                return;
+            }
+
+
+            Console.WriteLine(tokenResponseLectural.Json);
+
+            var apiClientLec = new HttpClient();
+            apiClientLec.SetBearerToken(tokenResponseLectural.AccessToken);
+
+            var responseLect = await apiClient.GetAsync("https://localhost:44351/api/Lecturals");
+            if (!responseLect.IsSuccessStatusCode)
+            { 
+                Console.WriteLine(responseLect.StatusCode);
             }
             else
             {
-                var content = await response.Content.ReadAsStringAsync();
+                var content = await responseLect.Content.ReadAsStringAsync();
                 Console.WriteLine(JArray.Parse(content));
             }
         }
