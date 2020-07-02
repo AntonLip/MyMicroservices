@@ -35,7 +35,7 @@ namespace LecturalAPI.Controllers
         }
 
         // GET: api/Lecturals
-       [Route("api/Lecturals/Min")]
+       [Route("Min")]
         public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalMinInfo(int Page = 0, int pageSizeCount = 5)
         {
             //return await _context.Lectural.ToListAsync();
@@ -43,7 +43,7 @@ namespace LecturalAPI.Controllers
             return await _lecturalService.GetAllLecturalMinInfoAsync(Page, pageSizeCount);
         }
         // GET: api/Lecturals/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<LecturalDTO>> GetLectural(Guid id)
         {
             var lectural = await _lecturalService.GetLecturalByIdAsync(id);
