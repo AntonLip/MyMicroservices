@@ -90,4 +90,49 @@ namespace LecturalAPI.Models.dataTransferModel
 
 
     }
+
+    public class LecturalMininfo 
+    {
+        public LecturalMininfo()
+        {
+                
+        }
+        public LecturalMininfo(Lectural lecturalDB)
+        {
+            id = lecturalDB.id;
+            firstName = lecturalDB.firstName;
+            middleName = lecturalDB.middleName;
+            lastName = lecturalDB.lastName;
+            pathPhotoSmall = lecturalDB.pathPhotoSmall;
+            pathPhotoBig = lecturalDB.pathPhotoBig;
+            if (lecturalDB.MilitaryRank == null)
+            {
+                MilitaryRank = "none";
+            }
+            else
+            {
+                MilitaryRank = lecturalDB.MilitaryRank.name;
+            }
+            if (lecturalDB.Position == null)
+            {
+                Position = "none";
+            }
+            else
+            {
+                Position = lecturalDB.Position.name;
+            }
+        }
+
+        public Guid id { get; set; }
+        public string lastName { get; set; }
+        public string firstName { get; set; }
+        public string middleName { get; set; }
+        public string pathPhotoSmall { get; set; }
+        public string pathPhotoBig { get; set; }
+        public string MilitaryRank { get; set; }
+        public string Position { get; set; }
+    }
 }
+
+
+    

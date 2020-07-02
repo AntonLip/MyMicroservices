@@ -24,13 +24,7 @@ namespace IdentitySerrver4
             new ApiScope("api1", "My API"),
             new ApiScope("api2", "Their Api")
         };
-        public static IEnumerable<ApiResource> GetAllApiRespurces()
-        {
-            return new List<ApiResource>
-           {
-            new ApiResource("api1", "My API")
-           };
-        }
+        
         public static List<TestUser> GetUsers()
         {
             return new List<TestUser>

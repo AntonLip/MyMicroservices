@@ -36,6 +36,23 @@ namespace LecturalAPI.Services
             }
             return lecturalDTO;
         }
+        public async Task<List<LecturalMininfo>> GetAllLecturalMinInfoAsync(int Page = 0, int pageSizeCount = 5)
+        {
+
+            var lectural = await _context.Lectural.Include(c => c.Position)
+                                                  .Include(c => c.MilitaryRank)
+                                                  .Skip(Page * pageSizeCount).Take(pageSizeCount)
+                                                  .ToListAsync();
+
+
+            List<LecturalMininfo> lecturalDTO = new List<LecturalMininfo>();
+            foreach (var g in lectural)
+            {
+
+                lecturalDTO.Add(new LecturalMininfo(g));
+            }
+            return lecturalDTO;
+        }
 
         public async Task<LecturalDTO> GetLecturalByIdAsync(Guid id)
         {

@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
-
 {
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

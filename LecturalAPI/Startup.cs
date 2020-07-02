@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Logging;
 
 namespace LecturalAPI
 {
@@ -23,6 +24,7 @@ namespace LecturalAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -41,8 +43,8 @@ namespace LecturalAPI
             services.AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
-                options.Authority = "https://localhost:5001";
-
+                options.Authority = "http://localhost:5001";
+                options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false
@@ -61,14 +63,6 @@ namespace LecturalAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
-            //services.AddAuthentication("Bearer")
-            //    .AddIdentityServerAuthentication(options =>
-            //    {
-            //        options.Authority = "http://localhost:5001";
-            //        options.RequireHttpsMetadata = false;
-            //        options.ApiName = "api1";
-            //    });
-           
 
         }
 
@@ -81,11 +75,10 @@ namespace LecturalAPI
             }
 
             app.UseCors("MyPolicy");
-           // app.UseRouting();
-            app.UseMvc();
-
+            app.UseRouting();
+           
             app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
 
             //app.UseHttpsRedirection();
@@ -93,11 +86,11 @@ namespace LecturalAPI
             //app.UseRouting();
 
             //app.UseAuthorization();
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapDefaultControllerRoute()
-            //        .RequireAuthorization();
-            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute()
+                    .RequireAuthorization("ApiScope");
+            });
 
         }
     }

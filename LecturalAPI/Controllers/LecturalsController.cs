@@ -14,7 +14,7 @@ namespace LecturalAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class LecturalsController : ControllerBase
     {
         private readonly AppdbContext _context;
@@ -34,6 +34,14 @@ namespace LecturalAPI.Controllers
             return await _lecturalService.GetAllLecturalAsync(Page, pageSizeCount);
         }
 
+        // GET: api/Lecturals
+       [Route("api/Lecturals/Min")]
+        public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalMinInfo(int Page = 0, int pageSizeCount = 5)
+        {
+            //return await _context.Lectural.ToListAsync();
+            //return await _context.Lectural.Skip(Page * pageSizeCount).Take(pageSizeCount).ToListAsync();
+            return await _lecturalService.GetAllLecturalMinInfoAsync(Page, pageSizeCount);
+        }
         // GET: api/Lecturals/5
         [HttpGet("{id}")]
         public async Task<ActionResult<LecturalDTO>> GetLectural(Guid id)
