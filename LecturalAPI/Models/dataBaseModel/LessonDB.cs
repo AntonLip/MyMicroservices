@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LecturalAPI.Models.dataTransferModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,6 +9,29 @@ namespace LecturalAPI.Models.dataBaseModel
 {
     public class LessonDB
     {
+        public LessonDB()
+        {
+        }
+
+        public LessonDB(Lectural lecturalDB, DisciplineDB discipline, LessonTypeDB lessonType, LessonDTO lessonDTO) 
+        {
+            this.id = lessonDTO.id;
+            this.name = lessonDTO.name;
+            this.sectionName = lessonDTO.sectionName;
+            this.themeName = lessonDTO.themeName;
+            this.dateofLesson = lessonDTO.dateofLesson;
+            this.infoForCadets = lessonDTO.infoForCadets;
+            this.infoForEngeneer = lessonDTO.infoForEngeneer;
+            this.InfoForLectural = lessonDTO.InfoForLectural;
+            this.auditoreNumber = lessonDTO.auditoreNumber;
+            this.countHours = lessonDTO.countHours;
+
+            this.Lectural = lecturalDB;
+            this.LessonTypeDB = lessonType;
+            this.Discipline = discipline;
+
+        }
+
         [Key]
         public Guid id { get; set; }
         public string name { get; set; }

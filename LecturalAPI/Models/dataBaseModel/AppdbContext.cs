@@ -1,5 +1,6 @@
 ﻿using LecturalAPI.Models.dataBaseModel;
 using Microsoft.EntityFrameworkCore;
+using LecturalAPI.Models.dataTransferModel;
 
 namespace LecturalAPI.Models
 {
