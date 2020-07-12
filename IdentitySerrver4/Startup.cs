@@ -10,10 +10,12 @@ namespace IdentitySerrver4
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddIdentityServer()
               .AddDeveloperSigningCredential()
               .AddInMemoryApiScopes(Config.ApiScopes)
-              .AddInMemoryClients(Config.GetAllClients());
+              .AddInMemoryClients(Config.GetAllClients())
+              .AddInMemoryApiResources(Config.ApiResources);
               //.AddTestUsers(Config.GetUsers())
               //.AddInMemoryIdentityResources(Config.GetIdentityResources())
               //.AddInMemoryApiResources(Config.GetAllApiRespurces())
@@ -27,6 +29,9 @@ namespace IdentitySerrver4
             
             app.UseDeveloperExceptionPage();
             app.UseIdentityServer();
+
+            app.UseStaticFiles();
+            app.UseMvcWithDefaultRoute();
 
         }
     }

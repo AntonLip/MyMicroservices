@@ -10,21 +10,27 @@ namespace IdentitySerrver4
 {
     public static class Config
     {
-        public static IEnumerable<IdentityResource> GetIdentityResources()
-        {
-            return new List<IdentityResource>
+        public static IEnumerable<IdentityResource> IdentityResources =>
+          new List<IdentityResource>
                 {
                     new IdentityResources.OpenId(),
-                    new IdentityResources.Profile()
+                    new IdentityResources.Profile(),
+                    new IdentityResources.Email()
                 };
-        }
+        
         public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
             new ApiScope("api1", "My API"),
             new ApiScope("api2", "Their Api")
         };
-        
+
+        public static IEnumerable<ApiResource> ApiResources =>
+            new List<ApiResource>
+            {
+                new ApiResource("api1", "My API")
+            };
+
         public static List<TestUser> GetUsers()
         {
             return new List<TestUser>
@@ -67,6 +73,26 @@ namespace IdentitySerrver4
                     new Secret("secret1".Sha256())
                     },
                     AllowedScopes = { "api2" }
+                },
+                 new Client
+                {
+                    ClientId = "SPA.client",
+                    ClientName = "SPA",
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    ClientSecrets =
+                    {
+                    new Secret("SecretSPA".Sha256())
+                    },
+                    RedirectUris = { "http://localhost:5001/signin-oidc" },
+                    PostLogoutRedirectUris = { "http://localhost:5001/signout-callback-oidc" },
+                    AllowedScopes =
+                     {
+                         IdentityServerConstants.StandardScopes.OpenId,
+                         IdentityServerConstants.StandardScopes.OpenId,
+                         IdentityServerConstants.StandardScopes.Profile,
+                         "api1"
+                     },
+                     AllowOfflineAccess = true
                 }
             };
          }
