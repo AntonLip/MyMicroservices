@@ -24,6 +24,7 @@ namespace LecturalAPI.Models
         public int CountCadets { get; set; }
         public string info { get; set; }
 
+        public List<TimetableDB> TimetableDB { get; set; }
 
         public List<CadetDB> CadetDB { get; set; }
     }

@@ -8,6 +8,7 @@ namespace LecturalAPI.Models.dataTransferModel
 {
     public class LessonDTO
     {
+       
 
         public LessonDTO()
         {
@@ -24,7 +25,6 @@ namespace LecturalAPI.Models.dataTransferModel
 
             this.auditoreNumber = lesson.auditoreNumber;
 
-            this.dateofLesson = lesson.dateofLesson;
             this.lessonType = lesson.LessonTypeDB.nameOfType;
 
             this.lecturalName = lesson.Lectural.lastName;
@@ -33,7 +33,7 @@ namespace LecturalAPI.Models.dataTransferModel
             this.sectionName = lesson.sectionName;
             this.themeName = lesson.themeName;
             this.name = lesson.name;
-
+            this.currentNumberOflessonsType = lesson.currentNumberOflessonsType;
             this.disciplineName = lesson.Discipline.name;
             this.disciplineId = lesson.Discipline.id;
 
@@ -47,9 +47,8 @@ namespace LecturalAPI.Models.dataTransferModel
         public string infoForCadets { get; set; }
         public int auditoreNumber { get; set; }
         public string infoForEngeneer { get; set; }
-        public DateTime dateofLesson { get; set; }
         public Guid lecturalId { get; set; }
-
+        public int currentNumberOflessonsType { get; set; }
 
         public string lessonType { get; set; }
         public string lecturalName { get; set; }

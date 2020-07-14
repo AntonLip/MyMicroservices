@@ -12,7 +12,7 @@ namespace LecturalAPI.Controllers
     [ApiController]
     public class LessonDTOesController : ControllerBase
     {
-        private readonly AppdbContext _context;
+       // private readonly AppdbContext _context;
         private readonly LessonsService _lessonsService;
 
         public LessonDTOesController(AppdbContext context)

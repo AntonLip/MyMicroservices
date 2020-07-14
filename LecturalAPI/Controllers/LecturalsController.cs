@@ -17,7 +17,7 @@ namespace LecturalAPI.Controllers
     //[Authorize]
     public class LecturalsController : ControllerBase
     {
-        private readonly AppdbContext _context;
+        //private readonly AppdbContext _context;
         private readonly LecturalService _lecturalService;
         public LecturalsController(AppdbContext context)
         {
@@ -80,12 +80,11 @@ namespace LecturalAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Lectural>> PostLectural(Lectural lectural)
+        public async Task<ActionResult<LecturalDTO>> PostLectural(LecturalDTO lectural)
         {
-            _context.Lectural.Add(lectural);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetLectural", new { id = lectural.id }, lectural);
+            var lec =  await _lecturalService.AddLecturalAsync(lectural);
+         
+            return CreatedAtAction("GetLectural", new { id = lec.id }, lec);
         }
 
         // DELETE: api/Lecturals/5

@@ -124,7 +124,6 @@ namespace LecturalAPI.Services
             lessonDB.id = lessonDTO.id;
             lessonDB.auditoreNumber = lessonDTO.auditoreNumber;
             lessonDB.countHours = lessonDTO.countHours;
-            lessonDB.dateofLesson = lessonDTO.dateofLesson;
             lessonDB.infoForCadets = lessonDTO.infoForCadets;
             lessonDB.infoForEngeneer = lessonDTO.InfoForLectural;
             lessonDB.name = lessonDTO.name;
