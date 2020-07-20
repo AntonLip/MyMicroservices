@@ -33,7 +33,7 @@ namespace LecturalAPI.Models.dataTransferModel
             this.sectionName = lesson.sectionName;
             this.themeName = lesson.themeName;
             this.name = lesson.name;
-            this.currentNumberOflessonsType = lesson.currentNumberOflessonsType;
+           // this.currentNumberOflessonsType = lesson.currentNumberOflessonsType;
             this.disciplineName = lesson.Discipline.name;
             this.disciplineId = lesson.Discipline.id;
 
@@ -48,7 +48,7 @@ namespace LecturalAPI.Models.dataTransferModel
         public int auditoreNumber { get; set; }
         public string infoForEngeneer { get; set; }
         public Guid lecturalId { get; set; }
-        public int currentNumberOflessonsType { get; set; }
+       // public int currentNumberOflessonsType { get; set; }
 
         public string lessonType { get; set; }
         public string lecturalName { get; set; }
