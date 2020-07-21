@@ -15,6 +15,7 @@ namespace LecturalAPI.Models.dataBaseModel
         public string info { get; set; }
 
 
+        public List<DisciplineDB> DisciplineDB { get; set; }
         public List<GroupDB> GroupDB { get; set; }
     }
 }

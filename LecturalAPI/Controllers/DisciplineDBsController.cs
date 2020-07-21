@@ -91,7 +91,7 @@ namespace LecturalAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<DisciplineDB>> DeleteDisciplineDB(Guid id)
         {
-            var disciplineDB = await _context.Discipline.FindAsync(id);
+            var disciplineDB = await _context.Discipline.Where(c => c.id == id).FirstOrDefaultAsync();
             if (disciplineDB == null)
             {
                 return NotFound();

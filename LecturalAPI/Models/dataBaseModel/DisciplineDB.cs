@@ -32,7 +32,7 @@ namespace LecturalAPI.Models
         public int Semester { get; set; }
         public GroupDB GroupDB { get; set; }
         public List<LessonDB> lessonDBs { get; set; }
-      //  public List<TimetableDB> TimetableDB { get; set; }
+        public List<TimetableDB> TimetableDB { get; set; }
 
     }
 }

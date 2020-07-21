@@ -28,7 +28,7 @@ namespace LecturalAPI.Models.dataBaseModel
             this.Lectural = lecturalDB;
             this.LessonTypeDB = lessonType;
             this.Discipline = discipline;
-          //  this.currentNumberOflessonsType = lessonDTO.currentNumberOflessonsType;
+            this.currentNumberOflessonsType = lessonDTO.currentNumberOflessonsType;
 
         }
 
@@ -38,7 +38,7 @@ namespace LecturalAPI.Models.dataBaseModel
         public string sectionName { get; set; }
         public string themeName { get; set; }
         public int countHours { get; set; }
-        //public int currentNumberOflessonsType { get; set; }
+        public int currentNumberOflessonsType { get; set; }
         public string InfoForLectural { get; set; }
         public string infoForCadets { get; set; }
         public int auditoreNumber { get; set; }
@@ -48,7 +48,7 @@ namespace LecturalAPI.Models.dataBaseModel
         public LessonTypeDB LessonTypeDB { get; set; }
         public Lectural Lectural { get; set; }
         public DisciplineDB Discipline { get; set; }
-       // public List<TimetableDB> TimetableDB { get; set; }
+        public List<TimetableDB> TimetableDB { get; set; }
 
     }
 }

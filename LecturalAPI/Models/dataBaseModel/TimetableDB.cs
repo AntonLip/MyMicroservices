@@ -22,6 +22,5 @@ namespace LecturalAPI.Models.dataBaseModel
 
         public int numberOfAud { get; set; }
         public Lectural firstLectural { get; set; }
-        public Lectural secondLectural { get; set; }
     }
 }

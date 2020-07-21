@@ -24,7 +24,7 @@ namespace LecturalAPI.Models
         public DbSet<AcademicTitle> AcademicTitle { get; set; }
         public DbSet<MilitaryRank> MilitaryRank { get; set; }
         public DbSet<Position> Position { get; set; }
-       // public DbSet<TimetableDB> Timetable { get; set; }
+        public DbSet<TimetableDB> Timetable { get; set; }
 
     }
 }

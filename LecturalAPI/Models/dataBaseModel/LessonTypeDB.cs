@@ -12,6 +12,7 @@ namespace LecturalAPI.Models
         [Key]
         public Guid id { get; set; }
         public string nameOfType { get; set; }
+        public string shortNameOfType { get; set; }
         public string info { get; set; }
 
         public List<LessonDB> lessonDbs { get; set; }

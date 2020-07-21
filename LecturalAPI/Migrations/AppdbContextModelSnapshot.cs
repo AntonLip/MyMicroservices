@@ -216,6 +216,9 @@ namespace LecturalAPI.Migrations
                     b.Property<string>("nameOfType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("shortNameOfType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("id");
 
                     b.ToTable("LessonType");
@@ -273,8 +276,8 @@ namespace LecturalAPI.Migrations
                     b.Property<int>("countHours")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("dateofLesson")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("currentNumberOflessonsType")
+                        .HasColumnType("int");
 
                     b.Property<string>("infoForCadets")
                         .HasColumnType("nvarchar(max)");
@@ -373,6 +376,49 @@ namespace LecturalAPI.Migrations
                     b.ToTable("Specialization");
                 });
 
+            modelBuilder.Entity("LecturalAPI.Models.dataBaseModel.TimetableDB", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DisciplineDBid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupDBid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LessonDBid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("dateOfLesson")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("firstLecturalid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("numberOfAud")
+                        .HasColumnType("int");
+
+                    b.Property<int>("numberOfLesson")
+                        .HasColumnType("int");
+
+                    b.Property<int>("numberOfWeek")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("DisciplineDBid");
+
+                    b.HasIndex("GroupDBid");
+
+                    b.HasIndex("LessonDBid");
+
+                    b.HasIndex("firstLecturalid");
+
+                    b.ToTable("Timetable");
+                });
+
             modelBuilder.Entity("LecturalAPI.Models.CadetDB", b =>
                 {
                     b.HasOne("LecturalAPI.Models.GroupDB", "GroupDB")
@@ -440,6 +486,31 @@ namespace LecturalAPI.Migrations
                     b.HasOne("LecturalAPI.Models.LessonTypeDB", "LessonTypeDB")
                         .WithMany("lessonDbs")
                         .HasForeignKey("LessonTypeDBid");
+                });
+
+            modelBuilder.Entity("LecturalAPI.Models.dataBaseModel.TimetableDB", b =>
+                {
+                    b.HasOne("LecturalAPI.Models.DisciplineDB", "DisciplineDB")
+                        .WithMany("TimetableDB")
+                        .HasForeignKey("DisciplineDBid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LecturalAPI.Models.GroupDB", "GroupDB")
+                        .WithMany("TimetableDB")
+                        .HasForeignKey("GroupDBid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LecturalAPI.Models.dataBaseModel.LessonDB", "LessonDB")
+                        .WithMany("TimetableDB")
+                        .HasForeignKey("LessonDBid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LecturalAPI.Models.Lectural", "firstLectural")
+                        .WithMany("TimetableDB")
+                        .HasForeignKey("firstLecturalid");
                 });
 #pragma warning restore 612, 618
         }
