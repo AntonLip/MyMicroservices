@@ -33,6 +33,6 @@ namespace LecturalAPI.Models
 
         public int countNorm { get; set; }
         public int Semester { get; set; }
-        public int groupNumber { get; set; }
+        public string groupNumber { get; set; }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,9 +18,9 @@ namespace Timetable
 {
     class Program
     {
-        
-        private static readonly HttpClient client = new HttpClient();
-        [STAThreadAttribute]
+
+        static HttpClient client = new HttpClient();
+       
         static async Task Main(string[] args)
         {
             ClassFile classFile = new ClassFile();
@@ -168,7 +171,7 @@ namespace Timetable
                                         //await sendLessonToAPIAsync(lesson);
                                         Console.WriteLine(lesson.ToString());
                                         if(lesson.Lectural != "" && lesson.nameOfDiscipline != "")
-                                            await sendLessonToAPIAsync(lesson);
+                                          await  sendLessonToAPIAsync(lesson);
                                     }
                                 }
                                 idx++;
@@ -181,28 +184,16 @@ namespace Timetable
             }
         }
 
-       
+
 
         private static async Task sendLessonToAPIAsync(Lesson lesson)
         {
-            var values = new Dictionary<string, string>
-            {
-                { "numberOfWeek", lesson.numberOfWeek.ToString() },
-                { "dayOfWeek", lesson.dayOfWeek },
-                { "numberOfWeek", lesson.numberOfWeek.ToString() },
-                { "numbewrOfDayInWeek", lesson.numbewrOfDayInWeek.ToString() },
-                { "numberOfLesson", lesson.numberOfLesson.ToString() },
-                { "numberOfGroup",  lesson.numberOfGroup },
-                { "nameOfDiscipline", lesson.nameOfDiscipline },
-                { "typeOfLesson", lesson.typeOfLesson },
-                { "Lectural", lesson.Lectural },
-                { "date", lesson.date.ToString() },
-                { "auditore", lesson.auditore }
-            };
-
-            var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync("https://localhost:44351/api/TimetableDBs", content);
-
+            var url = "https://localhost:44351/api/TimetableDBs";
+            string jsonLesson = JsonConvert.SerializeObject(lesson);
+            var data = new StringContent(jsonLesson, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(url, data);
+            string result = response.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(" Response result = {0}. lesson send to API success", result);
         }
 
         public static string GetValue(SpreadsheetDocument doc, Cell cell)

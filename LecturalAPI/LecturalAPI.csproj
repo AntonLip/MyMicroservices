@@ -23,6 +23,8 @@
     <Compile Remove="Migrations\20200605091459_NewCadets.Designer.cs" />
     <Compile Remove="Migrations\20200605091732_NewCadets.cs" />
     <Compile Remove="Migrations\20200605091732_NewCadets.Designer.cs" />
+    <Compile Remove="Migrations\20200724083712_IntToStringFieldNUMBERgROUPinAllTable.cs" />
+    <Compile Remove="Migrations\20200724083712_IntToStringFieldNUMBERgROUPinAllTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

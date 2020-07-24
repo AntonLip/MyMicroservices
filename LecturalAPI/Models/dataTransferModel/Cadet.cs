@@ -31,7 +31,7 @@ namespace LecturalAPI.Models
         }
 
         public Guid id { get; set; }
-        public int groupNumber { get; set; }
+        public string groupNumber { get; set; }
         public string lastName { get; set; }
         public string firstName { get; set; }
         public string middleName { get; set; }

@@ -32,7 +32,7 @@ namespace LecturalAPI.Models.dataTransferModel.TimeTableDTO
         public string dayOfWeek { get; set; }
         public int numbewrOfDayInWeek { get; set; }
         public int numberOfLesson { get; set; }
-        public int numberOfGroup { get; set; }
+        public string numberOfGroup { get; set; }
 
         public string nameOfDiscipline { get; set; }
         public string typeOfLesson { get; set; }

@@ -11,7 +11,7 @@ namespace LecturalAPI.Models
         public Guid id { get; set; }
         public string ProfessionLastName { get; set; }
         public string nameOfSpecialization { get; set; }
-        public int numberOfGroup { get; set; }
+        public string numberOfGroup { get; set; }
         public int CountCadets { get; set; }
         public string info { get; set; }
 
