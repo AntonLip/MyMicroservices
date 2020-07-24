@@ -19,17 +19,12 @@ namespace LecturalAPI.Models.dataTransferModel
         {
             this.id = lesson.id;
 
-            this.infoForCadets = lesson.infoForCadets;
-            this.infoForEngeneer = lesson.infoForEngeneer;
-            this.InfoForLectural = lesson.InfoForLectural;
-
-            this.auditoreNumber = lesson.auditoreNumber;
 
             this.lessonType = lesson.LessonTypeDB.nameOfType;
 
             this.lecturalName = lesson.Lectural.lastName;
             this.lecturalId = lesson.Lectural.id;
-
+            pathToMaterials = lesson.pathToMaterials;
             this.sectionName = lesson.sectionName;
             this.themeName = lesson.themeName;
             this.name = lesson.name;
@@ -43,13 +38,10 @@ namespace LecturalAPI.Models.dataTransferModel
         public string sectionName { get; set; }
         public string themeName { get; set; }
         public int countHours { get; set; }
-        public string InfoForLectural { get; set; }
-        public string infoForCadets { get; set; }
         public int auditoreNumber { get; set; }
-        public string infoForEngeneer { get; set; }
         public Guid lecturalId { get; set; }
         public int currentNumberOflessonsType { get; set; }
-
+        public string pathToMaterials { get; set; }
         public string lessonType { get; set; }
         public string lecturalName { get; set; }
         public string disciplineName { get; set; }

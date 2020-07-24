@@ -45,7 +45,7 @@ namespace LecturalAPI.Services
         internal async Task<LessonDTO> AddlessonAsync(LessonDTO lessonDTO)
         {
             var lectural = await _context.Lectural.Where(c => c.id == lessonDTO.lecturalId).FirstOrDefaultAsync();
-            var gr = await _context.Discipline.Where(c => c.id == lessonDTO.disciplineId).FirstOrDefaultAsync();
+            var gr = await _context.Discipline.Where(c => c.name == lessonDTO.disciplineName).FirstOrDefaultAsync();
             var lessonType = await _context.LessonType.Where(c => c.nameOfType == lessonDTO.lessonType).FirstOrDefaultAsync();
             if (gr == null || lectural == null || lessonType == null)
             {
@@ -122,11 +122,9 @@ namespace LecturalAPI.Services
         private async Task<LessonDB> ModifyLesson(LessonDB lessonDB, LessonDTO lessonDTO)
         {
             lessonDB.id = lessonDTO.id;
-            lessonDB.auditoreNumber = lessonDTO.auditoreNumber;
             lessonDB.countHours = lessonDTO.countHours;
-            lessonDB.infoForCadets = lessonDTO.infoForCadets;
-            lessonDB.infoForEngeneer = lessonDTO.InfoForLectural;
             lessonDB.name = lessonDTO.name;
+            lessonDB.pathToMaterials = lessonDTO.pathToMaterials;
             lessonDB.sectionName = lessonDTO.sectionName;
             lessonDB.themeName = lessonDTO.themeName;
 

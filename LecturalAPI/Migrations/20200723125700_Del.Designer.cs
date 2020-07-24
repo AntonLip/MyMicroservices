@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20200723125700_Del")]
+    partial class Del
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,9 +93,6 @@ namespace LecturalAPI.Migrations
 
                     b.Property<DateTime>("dateOfPlan")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("fullName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isExam")
                         .HasColumnType("bit");
@@ -264,11 +263,17 @@ namespace LecturalAPI.Migrations
                     b.Property<Guid?>("Disciplineid")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("InfoForLectural")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("Lecturalid")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("LessonTypeDBid")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("auditoreNumber")
+                        .HasColumnType("int");
 
                     b.Property<int>("countHours")
                         .HasColumnType("int");
@@ -276,10 +281,13 @@ namespace LecturalAPI.Migrations
                     b.Property<int>("currentNumberOflessonsType")
                         .HasColumnType("int");
 
-                    b.Property<string>("name")
+                    b.Property<string>("infoForCadets")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("pathToMaterials")
+                    b.Property<string>("infoForEngeneer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("sectionName")
@@ -382,20 +390,14 @@ namespace LecturalAPI.Migrations
                     b.Property<Guid>("GroupDBid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Lectural")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("LessonDBid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("auditore")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("date")
+                    b.Property<DateTime>("dateOfLesson")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("dayOfWeek")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("firstLecturalid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("infoForEngeneers")
                         .HasColumnType("nvarchar(max)");
@@ -406,10 +408,7 @@ namespace LecturalAPI.Migrations
                     b.Property<string>("infoForcadets")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("nameOfDiscipline")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("numberOfGroup")
+                    b.Property<int>("numberOfAud")
                         .HasColumnType("int");
 
                     b.Property<int>("numberOfLesson")
@@ -417,15 +416,6 @@ namespace LecturalAPI.Migrations
 
                     b.Property<int>("numberOfWeek")
                         .HasColumnType("int");
-
-                    b.Property<int>("numbewrOfDayInWeek")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("refLecturalid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("typeOfLesson")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
@@ -435,7 +425,7 @@ namespace LecturalAPI.Migrations
 
                     b.HasIndex("LessonDBid");
 
-                    b.HasIndex("refLecturalid");
+                    b.HasIndex("firstLecturalid");
 
                     b.ToTable("Timetable");
                 });
@@ -529,9 +519,9 @@ namespace LecturalAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LecturalAPI.Models.Lectural", "refLectural")
+                    b.HasOne("LecturalAPI.Models.Lectural", "firstLectural")
                         .WithMany("TimetableDB")
-                        .HasForeignKey("refLecturalid");
+                        .HasForeignKey("firstLecturalid");
                 });
 #pragma warning restore 612, 618
         }

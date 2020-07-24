@@ -16,7 +16,7 @@ namespace LecturalAPI.Services
         }
         internal async Task<DisciplineDTOTimetable> GetDisciplineById(Guid id)
         {
-            var dDB =  await _context.Discipline.Where(c => c.id == id).Include(c => c.GroupDB).FirstOrDefaultAsync();
+            var dDB =  await _context.Discipline.Where(c => c.id == id).FirstOrDefaultAsync();
             DisciplineDTOTimetable disciplineDTO = new DisciplineDTOTimetable(dDB);
             return disciplineDTO;
         }
@@ -27,7 +27,7 @@ namespace LecturalAPI.Services
             {
                 return null;
             }
-            DisciplineDB disciplineDBDB = new DisciplineDB(gr, discipline);
+            DisciplineDB disciplineDBDB = new DisciplineDB(discipline);
             try
             {
                 _context.Discipline.Add(disciplineDBDB);

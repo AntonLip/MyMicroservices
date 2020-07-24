@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,46 +15,31 @@ namespace Timetable
 {
     class Program
     {
+        private static readonly HttpClient client = new HttpClient();
         [STAThreadAttribute]
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var openFileDialog1 = new OpenFileDialog
-            {
-                InitialDirectory = @"D:\",
-                Title = "Browse Text Files",
+            ClassFile classFile = new ClassFile();
 
-                CheckFileExists = true,
-                CheckPathExists = true,
-
-                DefaultExt = "csv",
-                Filter = "txt files (*.xlsx)|*.xlsx",
-                FilterIndex = 2,
-                RestoreDirectory = true
-            };
-            var file = "";
-            openFileDialog1.ShowDialog();
-            DialogResult dr = openFileDialog1.ShowDialog();
-            if (dr == DialogResult.OK)
-            {
-                file = openFileDialog1.FileName;
+            Thread thread = new Thread(() => Clipboard.SetText(classFile.GetPathToFile()));
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            string file = classFile.GetPathToFile();
+            if(file != null)
+            { 
                 using (var document = SpreadsheetDocument.Open(file, true))
                 {
                     //create the object for workbook part  
                     WorkbookPart wbPart = document.WorkbookPart;
-
                     //statement to get the count of the worksheet  
                     int worksheetcount = document.WorkbookPart.Workbook.Sheets.Count();
-
                     //statement to get the sheet object  
                     Sheet mysheet = (Sheet)document.WorkbookPart.Workbook.Sheets.ChildElements.GetItem(0);
-
                     //statement to get the worksheet object by using the sheet id  
                     Worksheet Worksheet = ((WorksheetPart)wbPart.GetPartById(mysheet.Id)).Worksheet;
-
-
                     //statement to get the sheetdata which contains the rows and cell in table  
                     IEnumerable<Row> Rows = Worksheet.GetFirstChild<SheetData>().Descendants<Row>();
-
                     //Loop through the Worksheet rows
                     foreach (var row in Rows)
                     {
@@ -60,13 +47,14 @@ namespace Timetable
                         {
                             //var qq = Program.GetSharedStringItemById(wbPart ,0);
                             var lesson = new Lesson();
-                            int idx = 1;
+                            int idx = 1; int idy = 0;
                             foreach (Cell cell in row.Descendants<Cell>())
                             {
 
                                 var val = Program.GetValue(document, cell);
-                                int idy = 0;
-                                if (idx < 7)
+                                if (val == "Неделя")
+                                    break;
+                                if (idx < 8)
                                 {
                                     if (idx == 1)
                                     {
@@ -87,7 +75,52 @@ namespace Timetable
                                     }
                                     if (idx == 4)
                                     {
-                                        lesson.date = val;
+                                        int day, month, year;
+                                        string [] z = val.Split(' ');
+                                        Int32.TryParse(z[0], out day);
+                                        Int32.TryParse(z[2], out year);
+                                        switch (z[1]) {
+                                            case "СЕНТЯБРЯ":
+                                                month = 09;break;
+
+                                            case "ОКТЯБРЯ":
+                                                month = 10; break;
+
+                                            case "НОЯБРЯ":
+                                                month = 11; break;
+
+                                            case "ДЕКАБРЯ":
+                                                month = 12; break;
+
+                                            case "ЯНВАРЯ":
+                                                month = 1; break;
+
+                                            case "ФЕВРАЛЯ":
+                                                month = 2; break;
+
+                                            case "МАРТ":
+                                                month = 3; break;
+
+                                            case "АПРЕЛЬ":
+                                                month = 4; break;
+
+                                            case "МАЙ":
+                                                month = 5; break;
+
+                                            case "ИЮНЬ":
+                                                month = 6; break;
+
+                                            case "ИЮЛЬ":
+                                                month = 7; break;
+
+                                            case "АВГУСТА":
+                                                month = 8; break;
+                                            default:
+                                                month = 0; break;
+
+                                        }
+                                        DateTime dateTime = new DateTime(year, month, day);
+                                        lesson.date = dateTime;
                                     }
                                     if (idx == 5)
                                     {
@@ -107,79 +140,73 @@ namespace Timetable
                                 {
 
                                     idy++;
-                                    if (idx == 1)
+                                    if (idy == 1)
                                     {
                                         lesson.numberOfGroup = val;
                                     }
-                                    if (idx == 2)
+                                    if (idy == 2)
                                     {
-                                        lesson.dayOfWeek = val;
+                                        lesson.nameOfDiscipline = val;
                                     }
 
-                                    if (idx == 3)
+                                    if (idy == 3)
                                     {
-                                        int x;
-                                        Int32.TryParse(val, out x);
-                                        lesson.numbewrOfDayInWeek = x;
+                                        lesson.typeOfLesson = val;
                                     }
-                                    if (idx == 4)
+                                    if (idy == 4)
                                     {
-                                        lesson.date = val;
+                                        lesson.Lectural = val;
                                     }
-                                    if (idx == 5)
+                                    if (idy == 5)
                                     {
-                                        int x;
-                                        Int32.TryParse(val, out x);
-                                        lesson.numberOfLesson = x;
+                                        if(val != null)
+                                            lesson.auditore = val;
+                                        else
+                                            lesson.auditore = "";
                                     }
-
+                                    if (idy == 7)
+                                    {
+                                        idy = 0;
+                                        //await sendLessonToAPIAsync(lesson);
+                                        Console.WriteLine(lesson.ToString());
+                                        if(lesson.Lectural != "" && lesson.nameOfDiscipline != "")
+                                            await sendLessonToAPIAsync(lesson);
+                                    }
                                 }
-
-
-
-
-                                Console.WriteLine("{0} \n", val);
                                 idx++;
                             }
                         }
 
                     }
-                    //getting the row as per the specified index of getitem method  
-
-
-                    //getting the cell as per the specified index of getitem method  
-                    // Cell currentcell = (Cell)currentrow.ChildElements.GetItem(0);
-                    //string currentcellvalue = string.Empty;
-                    //if (currentcell.DataType != null)
-                    //{
-                    //    if (currentcell.DataType == CellValues.SharedString)
-                    //    {
-                    //        int id = -1;
-
-                    //        if (Int32.TryParse(currentcell.InnerText, out id))
-                    //        {
-                    //            SharedStringItem item = GetSharedStringItemById(wbPart, id);
-
-                    //            if (item.Text != null)
-                    //            {
-                    //                //code to take the string value  
-                    //                currentcellvalue = item.Text.Text;
-                    //            }
-                    //            else if (item.InnerText != null)
-                    //            {
-                    //                currentcellvalue = item.InnerText;
-                    //            }
-                    //            else if (item.InnerXml != null)
-                    //            {
-                    //                currentcellvalue = item.InnerXml;
-                    //            }
-                    //        }
-                    //    }
-                    //}
 
                 }
             }
         }
+
+       
+
+        private static async Task sendLessonToAPIAsync(Lesson lesson)
+        {
+            var values = new Dictionary<string, string>
+            {
+                { "numberOfWeek", lesson.numberOfWeek.ToString() },
+                { "dayOfWeek", lesson.dayOfWeek },
+                { "numberOfWeek", lesson.numberOfWeek.ToString() },
+                { "numbewrOfDayInWeek", lesson.numbewrOfDayInWeek.ToString() },
+                { "numberOfLesson", lesson.numberOfLesson.ToString() },
+                { "numberOfGroup",  lesson.numberOfGroup },
+                { "nameOfDiscipline", lesson.nameOfDiscipline },
+                { "typeOfLesson", lesson.typeOfLesson },
+                { "Lectural", lesson.Lectural },
+                { "date", lesson.date.ToString() },
+                { "auditore", lesson.auditore }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync("https://localhost:44351/api/TimetableDBs", content);
+
+        }
+
         public static string GetValue(SpreadsheetDocument doc, Cell cell)
         {
             string value = cell.CellValue.InnerText;
@@ -204,10 +231,49 @@ namespace Timetable
         public string numberOfGroup { get; set; }
 
         public string nameOfDiscipline { get; set; }
-        public int typeOfLesson { get; set; }
+        public string typeOfLesson { get; set; }
         public string Lectural { get; set; }
-        public string date { get; set; }
+        public DateTime date { get; set; }
 
         public string auditore { get; set; }
+
+
+        public override string ToString()
+        {
+            return String.Format("number of week: {0}\t day Of Week:{1}\t number day in Week : {2}\n" +
+                "number of lesson:{3}\t group number : {4}\n" +
+                "name Of Discipline : {5}\t type Of Lesson : {6}\t auditore : {7}\n" +
+                "Lectural : {8}\t date : {9}\n",
+                numberOfWeek , dayOfWeek, numbewrOfDayInWeek, numberOfLesson,  numberOfGroup, nameOfDiscipline,typeOfLesson, auditore, Lectural, date);
+        }
+    }
+
+    public class ClassFile
+    {
+        public string GetPathToFile()
+        {
+            string path = null;
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = @"D:\",
+                Title = "Browse Text Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "csv",
+                Filter = "txt files (*.xlsx)|*.xlsx",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };            
+
+            DialogResult dr = openFileDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                path = openFileDialog.FileName;
+            }
+            return path;
+        }
+
     }
 }

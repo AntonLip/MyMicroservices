@@ -7,6 +7,7 @@ namespace LecturalAPI.Models
 {
     public class DisciplineDTOTimetable
     {
+
         public DisciplineDTOTimetable()
         {
 
@@ -21,7 +22,6 @@ namespace LecturalAPI.Models
             this.dateOfPlan = dDB.dateOfPlan;
             this.countNorm = dDB.countNorm;
             this.Semester = dDB.Semester;
-            this.groupNumber = dDB.GroupDB.numberOfGroup;
         }
 
         public Guid id { get; set; }
@@ -29,6 +29,8 @@ namespace LecturalAPI.Models
         public int countHours { get; set; }
         public bool isExam { get; set; }
         public DateTime dateOfPlan { get; set; }
+        public string fullName { get; set; }
+
         public int countNorm { get; set; }
         public int Semester { get; set; }
         public int groupNumber { get; set; }
