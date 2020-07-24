@@ -63,7 +63,21 @@ namespace LecturalAPI.Services
             timetableDB.LessonDB = await _context.Lesson.Where(c => c.id == tTDTOOut.lessonId).FirstOrDefaultAsync();
             timetableDB.DisciplineDB = await _context.Discipline.Where(c => c.name == tTDTOOut.nameOfDiscipline).FirstOrDefaultAsync();
             timetableDB.refLectural = await _context.Lectural.Where(c => c.lastName == tTDTOOut.Lectural).FirstOrDefaultAsync();
-            
+
+
+
+
+            timetableDB.auditore = tTDTOOut.auditore;
+            timetableDB.date = tTDTOOut.date;
+            timetableDB.dayOfWeek = tTDTOOut.dayOfWeek;
+            timetableDB.Lectural = tTDTOOut.Lectural;
+            timetableDB.nameOfDiscipline = tTDTOOut.nameOfDiscipline;
+            timetableDB.numberOfGroup = tTDTOOut.numberOfGroup;
+
+            timetableDB.numberOfLesson = tTDTOOut.numberOfLesson;
+            timetableDB.typeOfLesson = tTDTOOut.typeOfLesson;
+
+
             try
             {
                 _context.Timetable.Add(timetableDB);

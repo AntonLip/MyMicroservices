@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20200724143036_StrToNumberOfGroup")]
+    partial class StrToNumberOfGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,16 +378,16 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("DisciplineDBid")
+                    b.Property<Guid>("DisciplineDBid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("GroupDBid")
+                    b.Property<Guid>("GroupDBid")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Lectural")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("LessonDBid")
+                    b.Property<Guid>("LessonDBid")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("auditore")
@@ -513,15 +515,21 @@ namespace LecturalAPI.Migrations
                 {
                     b.HasOne("LecturalAPI.Models.DisciplineDB", "DisciplineDB")
                         .WithMany("TimetableDB")
-                        .HasForeignKey("DisciplineDBid");
+                        .HasForeignKey("DisciplineDBid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LecturalAPI.Models.GroupDB", "GroupDB")
                         .WithMany("TimetableDB")
-                        .HasForeignKey("GroupDBid");
+                        .HasForeignKey("GroupDBid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LecturalAPI.Models.dataBaseModel.LessonDB", "LessonDB")
                         .WithMany("TimetableDB")
-                        .HasForeignKey("LessonDBid");
+                        .HasForeignKey("LessonDBid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LecturalAPI.Models.Lectural", "refLectural")
                         .WithMany("TimetableDB")

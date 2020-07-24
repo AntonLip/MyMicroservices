@@ -77,9 +77,14 @@ namespace Timetable
                                     if (idx == 4)
                                     {
                                         int day, month, year;
-                                        string [] z = val.Split(' ');
+                                        string[] z = val.Split(' ');
                                         Int32.TryParse(z[0], out day);
-                                        Int32.TryParse(z[2], out year);
+                                        if (z[2].Length == 4)
+                                            Int32.TryParse(z[2], out year);
+                                        else
+                                        {                                            
+                                            Int32.TryParse(z[2].Substring(0, 3), out year);
+                                        }
                                         switch (z[1]) {
                                             case "СЕНТЯБРЯ":
                                                 month = 09;break;
@@ -152,7 +157,14 @@ namespace Timetable
 
                                     if (idy == 3)
                                     {
-                                        lesson.typeOfLesson = val;
+                                        int x = 0;
+                                        if(val != "" && val != "ОХРАНА" && val != "ПРАЗДНИК")
+                                        {
+                                            string[] z = val.Split(' ');
+                                            lesson.typeOfLesson = z[0];                                            
+                                            Int32.TryParse(z[z.Length-1], out x);
+                                            lesson.numberOfLesson = x;
+                                        }
                                     }
                                     if (idy == 4)
                                     {
@@ -169,9 +181,22 @@ namespace Timetable
                                     {
                                         idy = 0;
                                         //await sendLessonToAPIAsync(lesson);
-                                        Console.WriteLine(lesson.ToString());
-                                        if(lesson.Lectural != "" && lesson.nameOfDiscipline != "")
-                                          await  sendLessonToAPIAsync(lesson);
+                                        if (lesson.numberOfGroup != "431А" && lesson.numberOfGroup != "431Б" &&
+                                            lesson.numberOfGroup != "441А" && lesson.numberOfGroup != "441Б" &&
+                                            lesson.numberOfGroup != "451А" && lesson.numberOfGroup != "451Б")
+                                        {
+                                            Console.WriteLine(lesson.ToString());
+                                            if (lesson.Lectural != "" && lesson.nameOfDiscipline != "")
+                                                try
+                                                {
+                                                    await sendLessonToAPIAsync(lesson); 
+                                                }
+                                                catch(Exception e) 
+                                                {
+                                                    Console.WriteLine(e.Message);
+                                                }
+                                                
+                                        }
                                     }
                                 }
                                 idx++;

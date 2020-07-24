@@ -48,12 +48,9 @@ namespace LecturalAPI.Models.dataBaseModel
 
 
         public Lectural refLectural { get; set; }
-        public Guid LessonDBid { get; set; }
         public LessonDB LessonDB { get; set; }
 
-        public Guid GroupDBid { get; set; }
         public GroupDB GroupDB { get; set; }
-        public Guid DisciplineDBid { get; set; }
         public DisciplineDB DisciplineDB { get; set; }
     }
 }
