@@ -15,18 +15,16 @@ namespace Timetable
 {
     class Program
     {
+        
         private static readonly HttpClient client = new HttpClient();
         [STAThreadAttribute]
         static async Task Main(string[] args)
         {
             ClassFile classFile = new ClassFile();
 
-            Thread thread = new Thread(() => Clipboard.SetText(classFile.GetPathToFile()));
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-            thread.Join();
-            string file = classFile.GetPathToFile();
-            if(file != null)
+
+            string file = classFile.path;
+            if (file != null)
             { 
                 using (var document = SpreadsheetDocument.Open(file, true))
                 {
@@ -250,9 +248,16 @@ namespace Timetable
 
     public class ClassFile
     {
-        public string GetPathToFile()
+        public string path { get; set; }
+        public ClassFile()
         {
-            string path = null;
+            Thread thread = new Thread(()=> { GetPathToFile(); });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+        }
+        public void GetPathToFile()
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = @"D:\",
@@ -272,7 +277,7 @@ namespace Timetable
             {
                 path = openFileDialog.FileName;
             }
-            return path;
+          
         }
 
     }
