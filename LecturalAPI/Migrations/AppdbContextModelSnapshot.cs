@@ -415,6 +415,9 @@ namespace LecturalAPI.Migrations
                     b.Property<int>("numberOfLesson")
                         .HasColumnType("int");
 
+                    b.Property<int>("numberOfLessonInDay")
+                        .HasColumnType("int");
+
                     b.Property<int>("numberOfWeek")
                         .HasColumnType("int");
 

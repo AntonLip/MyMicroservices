@@ -43,10 +43,11 @@ namespace LecturalAPI.Controllers
 
             return timetableDB;
         }
-        [Route("TimetableDay")]
-        public async Task<ActionResult<TTDTOOut>> GetTimetableOnDay(string group, DateTime dateTime)
+        //[Route("TimetableDay")]
+        [HttpGet("{dateTime:DateTime}")]
+        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDay(DateTime dateTime)
         {
-            var timetableDB = await _timetableService.GetTimetableOnDayAsync(group, dateTime);
+            var timetableDB = await _timetableService.GetAllTimetableByDayAsync(dateTime);
 
             if (timetableDB == null)
             {
@@ -55,6 +56,21 @@ namespace LecturalAPI.Controllers
 
             return timetableDB;
         }
+        [Route("forGroup")]
+        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayByGroupAsync(DateTime dateTime, string groupDTO)
+        {
+            var timetableDB = await _timetableService.GetTimetableOnDayForGroupAsync(groupDTO, dateTime);
+
+            if (timetableDB == null)
+            {
+                return NotFound();
+            }
+
+            return timetableDB;
+        }
+
+
+
         // PUT: api/TimetableDBs/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

@@ -23,10 +23,39 @@ namespace LecturalAPI.Services
             throw new NotImplementedException();
         }
 
-        internal Task<TTDTOOut> GetAllTimetableByIdAsync(Guid id)
+        internal async Task<TTDTOOut> GetAllTimetableByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var timetable = await _context.Timetable.FindAsync(id);
+
+
+            if (timetable != null)
+            {
+                TTDTOOut timetableOUT = new TTDTOOut(timetable);
+
+                return timetableOUT;
+            }
+
+                return null;
+
         }
+
+        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetAllTimetableByDayAsync(DateTime currentDate)
+        {
+            var timetable = await _context.Timetable.Where(c => c.date == currentDate).ToListAsync();
+
+            List<TTDTOOut> timetableOUT = new List<TTDTOOut>();
+
+            if (timetable != null)
+            {
+                foreach (var t in timetable)
+                {
+                    timetableOUT.Add(new TTDTOOut(t));
+                }
+                return timetableOUT;
+            }
+            return null;
+        }
+
         internal async Task<TTDTOOut> UpdateTimeTibleAsync(Guid id, TTDTOOut tTDTOOut)
         {
             var timetableDB = await _context.Timetable.Where(c => c.id == id)
@@ -63,9 +92,6 @@ namespace LecturalAPI.Services
             timetableDB.LessonDB = await _context.Lesson.Where(c => c.id == tTDTOOut.lessonId).FirstOrDefaultAsync();
             timetableDB.DisciplineDB = await _context.Discipline.Where(c => c.name == tTDTOOut.nameOfDiscipline).FirstOrDefaultAsync();
             timetableDB.refLectural = await _context.Lectural.Where(c => c.lastName == tTDTOOut.Lectural).FirstOrDefaultAsync();
-
-
-
 
             timetableDB.auditore = tTDTOOut.auditore;
             timetableDB.date = tTDTOOut.date;
@@ -116,12 +142,24 @@ namespace LecturalAPI.Services
             return null;
 
         }
-
-        internal Task<TTDTOOut> GetTimetableOnDayAsync(string group, DateTime dateTime)
+       
+        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayForGroupAsync(string group, DateTime dateTime)
         {
-            throw new NotImplementedException();
-        }
+            var timetable = await _context.Timetable.Where(c => c.date == dateTime && c.numberOfGroup == group).ToListAsync();
 
+            List<TTDTOOut> timetableOUT = new List<TTDTOOut>();
+
+            if (timetable != null)
+            {
+                foreach (var t in timetable)
+                {
+                    timetableOUT.Add(new TTDTOOut(t));
+                }
+                return timetableOUT;
+            }
+            return null;
+        }
+        
         private bool TimetableDBExists(Guid id)
         {
             return _context.Timetable.Any(e => e.id == id);

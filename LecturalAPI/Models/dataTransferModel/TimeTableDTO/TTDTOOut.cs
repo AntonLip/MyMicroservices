@@ -26,6 +26,7 @@ namespace LecturalAPI.Models.dataTransferModel.TimeTableDTO
             Lectural = timetableDB.Lectural;
             date = timetableDB.date;
             auditore = timetableDB.auditore;
+            numberOfLessonInDay = timetableDB.numberOfLessonInDay;
         }
         public Guid id { get; set; }
         public int numberOfWeek { get; set; }
@@ -33,6 +34,8 @@ namespace LecturalAPI.Models.dataTransferModel.TimeTableDTO
         public int numbewrOfDayInWeek { get; set; }
         public int numberOfLesson { get; set; }
         public string numberOfGroup { get; set; }
+        public int numberOfLessonInDay { get; set; }
+
 
         public string nameOfDiscipline { get; set; }
         public string typeOfLesson { get; set; }

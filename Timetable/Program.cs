@@ -132,7 +132,7 @@ namespace Timetable
                                     {
                                         int x;
                                         Int32.TryParse(val, out x);
-                                        lesson.numberOfLesson = x;
+                                        lesson.numberOfLessonInDay = x;
                                     }
                                     if (idx == 7)
                                     {
@@ -234,6 +234,7 @@ namespace Timetable
         {
             return workbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().ElementAt(id);
         }
+    
     }
 
     public class Lesson
@@ -243,14 +244,13 @@ namespace Timetable
         public int numbewrOfDayInWeek { get; set; }
         public int numberOfLesson { get; set; }
         public string numberOfGroup { get; set; }
-
+        public int numberOfLessonInDay { get; set; }
         public string nameOfDiscipline { get; set; }
         public string typeOfLesson { get; set; }
         public string Lectural { get; set; }
         public DateTime date { get; set; }
 
         public string auditore { get; set; }
-
 
         public override string ToString()
         {

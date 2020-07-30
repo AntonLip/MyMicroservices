@@ -23,6 +23,8 @@ namespace LecturalAPI.Models.dataBaseModel
             this.Lectural = tTDTOOut.Lectural;
             this.date = tTDTOOut.date;
             this.auditore = tTDTOOut.auditore;
+            numberOfLessonInDay = tTDTOOut.numberOfLessonInDay;
+
         }
 
         [Key]
@@ -32,7 +34,7 @@ namespace LecturalAPI.Models.dataBaseModel
         public int numbewrOfDayInWeek { get; set; }
         public int numberOfLesson { get; set; }
         public string numberOfGroup { get; set; }
-
+        public int numberOfLessonInDay{ get; set; }
         public string nameOfDiscipline { get; set; }
         public string typeOfLesson { get; set; }
         public string Lectural { get; set; }
