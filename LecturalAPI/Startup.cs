@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace LecturalAPI
 {
@@ -27,11 +28,13 @@ namespace LecturalAPI
             IdentityModelEventSource.ShowPII = true;
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.WithOrigins("http://localhost:3000")
+                       .AllowAnyHeader()
                        .AllowAnyMethod()
-                       .AllowAnyHeader();
+                       .AllowCredentials();
             }));
-
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddDbContextPool<AppdbContext>(opts =>
                 opts.UseSqlServer("server = (localDB)\\MSSQLLocalDB; database=WebDepartment; Trusted_Connection = true")
             );
@@ -45,10 +48,8 @@ namespace LecturalAPI
             {
                 options.Authority = "http://localhost:5001";
                 options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateAudience = false
-                };
+                options.Audience = "api1";
+                
             });
 
             services.AddAuthorization(options =>
@@ -60,8 +61,7 @@ namespace LecturalAPI
                 });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddMvc(option => option.EnableEndpointRouting = false);
+
 
 
         }
@@ -69,28 +69,34 @@ namespace LecturalAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("MyPolicy");
+            app.UseAuthentication();
+            app.UseMvc();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors("MyPolicy");
-            app.UseRouting();
+            //app.UseRouting();
            
-            app.UseAuthentication();
             app.UseAuthorization();
 
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("api1 is running");
+            });
 
             //app.UseHttpsRedirection();
 
             //app.UseRouting();
 
             //app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute()
-                    .RequireAuthorization("ApiScope");
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapDefaultControllerRoute()
+            //        .RequireAuthorization("ApiScope");
+            //});
 
         }
     }

@@ -29,22 +29,13 @@ namespace IdentitySerrver4
                 AllowAll = true
             };
             services.AddSingleton<ICorsPolicyService>(cors);
-            services.AddIdentityServer(
-                options =>
-                {
-                    options.UserInteraction.LoginUrl = "http://localhost:3000/Login";
-                    options.UserInteraction.ErrorUrl = "http://localhost:3000/error";
-                    options.UserInteraction.LogoutUrl = "http://localhost:3000/Login";
-                })
+            services.AddIdentityServer()
               .AddDeveloperSigningCredential()
+              .AddInMemoryIdentityResources(Config.IdentityResources)
               .AddInMemoryApiScopes(Config.ApiScopes)
               .AddInMemoryClients(Config.GetAllClients())
-              .AddInMemoryApiResources(Config.ApiResources);
-              //.AddTestUsers(Config.GetUsers())
-              //.AddInMemoryIdentityResources(Config.GetIdentityResources())
-              //.AddInMemoryApiResources(Config.GetAllApiRespurces())
-              
-
+              .AddInMemoryApiResources(Config.ApiResources)
+              .AddTestUsers(Config.GetUsers());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -124,8 +124,43 @@ namespace LecturalAPI.Services
             }
         }
 
+        internal async Task<int> ChangeLecturalInTimetable(string lecturalOlD, string lecturalNew)
+        {
+            var Timetables = await _context.Timetable.Where(c => c.Lectural == lecturalOlD).ToListAsync();
 
-
+            int coutnerForChanges = 0;
+            if (Timetables != null)
+            {
+                foreach (var t in Timetables)
+                {
+                    coutnerForChanges++;
+                    t.Lectural = lecturalNew;
+                    var lectural = await _context.Lectural.Where(c=>c.lastName == lecturalNew).FirstOrDefaultAsync();
+                    if (lectural != null)
+                    {
+                        t.refLectural = lectural;
+                    }
+                    _context.Entry(t).State = EntityState.Modified;
+                }
+            }
+           
+            try
+            {
+                await _context.SaveChangesAsync();
+                return coutnerForChanges;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (Timetables != null)
+                {
+                    return -1;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
       
 
         internal async Task<TTDTOOut> DeleteTimetableAsync(Guid id)

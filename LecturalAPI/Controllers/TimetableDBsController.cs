@@ -104,6 +104,18 @@ namespace LecturalAPI.Controllers
             else
                 return NoContent();
         }
+        [HttpPost]
+        [Route("changeLectural")]
+        public async Task<ActionResult<int>> PostLecturalInTimetable(string lecturalOlD, string lecturalNew)
+        {
+            //Response
+            var result = await _timetableService.ChangeLecturalInTimetable(lecturalOlD , lecturalNew );
+            if (result == -1) 
+            {
+                return NotFound();
+            }
+            return result;
+        }
 
         // DELETE: api/TimetableDBs/5
         [HttpDelete("{id}")]

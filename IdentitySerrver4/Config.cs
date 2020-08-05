@@ -91,22 +91,22 @@ namespace IdentitySerrver4
                 {
                     ClientId = "SPA.client",
                     ClientName = "SPA",
-                    AllowedGrantTypes = GrantTypes.Code,
-                    RequireClientSecret = false,
-                    ClientSecrets =
+                     ClientSecrets =
+                        {
+                            new Secret("secret".Sha256())
+                        },
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                     AllowAccessTokensViaBrowser = true,
+
+                    RedirectUris = { "http://localhost:3000/signin-oidc"},
+                    PostLogoutRedirectUris = { "http://localhost:3000/signout-callback-oidc" },
+                    AllowedScopes = new List<string>
                     {
-                    new Secret("SecretSPA".Sha256())
-                    },
-                    RedirectUris = { "http://localhost:3000/Login" },
-                    PostLogoutRedirectUris = { "http://localhost:3000/" },
-                    AllowedScopes =
-                     {
-                         IdentityServerConstants.StandardScopes.OpenId,
-                         IdentityServerConstants.StandardScopes.Profile,
-                          IdentityServerConstants.StandardScopes.Email,
-                         "api1"
-                     },
-                     AllowOfflineAccess = true
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Email,
+                    "api1"
+                    }
                 }
             };
          }
