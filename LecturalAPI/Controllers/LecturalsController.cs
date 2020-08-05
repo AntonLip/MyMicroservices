@@ -14,7 +14,7 @@ namespace LecturalAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class LecturalsController : ControllerBase
     {
         //private readonly AppdbContext _context;
