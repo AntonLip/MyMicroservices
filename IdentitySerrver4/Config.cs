@@ -36,7 +36,7 @@ namespace IdentitySerrver4
         public static List<TestUser> GetUsers()
         {
             return new List<TestUser> {
-            new TestUser
+                new TestUser
             {
                 SubjectId = "1",
                 Username = "alice",
@@ -56,7 +56,8 @@ namespace IdentitySerrver4
                     Claims =
                     {
                         new Claim(JwtClaimTypes.Name, "Bob Smith"),
-                        new Claim(JwtClaimTypes.Email, "BobSmith@email.com")
+                        new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
+                        new Claim(JwtClaimTypes.Scope, "read")
                     }
                 }
             };
@@ -87,7 +88,7 @@ namespace IdentitySerrver4
                     },
                     AllowedScopes = { "api2" }
                 },
-                 new Client
+                new Client
                 {
                     ClientId = "SPA.client",
                     ClientName = "SPA",

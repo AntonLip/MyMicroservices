@@ -49,8 +49,20 @@ namespace LecturalAPI
                 options.Authority = "http://localhost:5001";
                 options.RequireHttpsMetadata = false;
                 options.Audience = "api1";
-                
-            });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    
+                    ValidateAudience = false
+                };
+            })
+            .AddOAuth2Introspection("token", options =>
+            {
+                options.Authority = "http://localhost:5001";
+
+                // this maps to the API resource name and secret
+                options.ClientId = "SPA.client";
+                options.ClientSecret = "secret";
+            }); 
 
             services.AddAuthorization(options =>
             {
@@ -78,7 +90,7 @@ namespace LecturalAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseRouting();
+            app.UseRouting();
            
             app.UseAuthorization();
 

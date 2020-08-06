@@ -9,6 +9,7 @@ using LecturalAPI.Models;
 using LecturalAPI.Services;
 using LecturalAPI.Models.dataTransferModel;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace LecturalAPI.Controllers
 {
@@ -17,6 +18,7 @@ namespace LecturalAPI.Controllers
     [Authorize]
     public class LecturalsController : ControllerBase
     {
+       
         //private readonly AppdbContext _context;
         private readonly LecturalService _lecturalService;
         public LecturalsController(AppdbContext context)
@@ -36,11 +38,18 @@ namespace LecturalAPI.Controllers
 
         // GET: api/Lecturals
        [Route("Min")]
+       
         public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalMinInfo(int Page = 0, int pageSizeCount = 5)
         {
+            var nameIdentifier = User.Claims
+             .Where(x => x.Type == "scope").FirstOrDefault(c => c.Value == "api1");
+            HttpContext.
+            return await _lecturalService.GetAllLecturalMinInfoAsync(Page, pageSizeCount);
+
+           
+
             //return await _context.Lectural.ToListAsync();
             //return await _context.Lectural.Skip(Page * pageSizeCount).Take(pageSizeCount).ToListAsync();
-            return await _lecturalService.GetAllLecturalMinInfoAsync(Page, pageSizeCount);
         }
         // GET: api/Lecturals/5
         [HttpGet("{id:guid}")]
