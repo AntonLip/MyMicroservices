@@ -83,6 +83,7 @@ namespace IdentitySerrver4
         {
             return new List<Client>
             {
+                // machine to machine 
                 new Client
                 {
                     ClientId = "client",
@@ -91,18 +92,9 @@ namespace IdentitySerrver4
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "api1", "api2" }
                 },
-                new Client
-                {
-                    ClientId = "whether.client",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets =
-                    {
-                    new Secret("secret1".Sha256())
-                    },
-                    AllowedScopes = { "api2" }
-                },
+                // js client
                 new Client
                 {
                     ClientId = "SPA.client",
