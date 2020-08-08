@@ -51,7 +51,6 @@ namespace LecturalAPI
                 options.Audience = "api1";
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    
                     ValidateAudience = false
                 };
             })
@@ -62,7 +61,7 @@ namespace LecturalAPI
                 // this maps to the API resource name and secret
                 options.ClientId = "SPA.client";
                 options.ClientSecret = "secret";
-            }); 
+            });
 
             services.AddAuthorization(options =>
             {
@@ -91,7 +90,7 @@ namespace LecturalAPI
             }
 
             app.UseRouting();
-           
+
             app.UseAuthorization();
 
             app.Run(async (context) =>

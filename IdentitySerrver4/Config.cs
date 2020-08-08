@@ -47,6 +47,21 @@ namespace IdentitySerrver4
                         new Claim(JwtClaimTypes.Email, "AliceSmith@email.com")
                     },
                 
+            }, 
+                new TestUser
+            {
+                SubjectId = "3",
+                Username = "Липлянин",
+                Password = "Липлянин",
+                Claims =
+                    {
+                        new Claim(JwtClaimTypes.Name, "Антон Липлянин"),
+                        new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
+                        new Claim(JwtClaimTypes.MayAct, "read"),
+                        new Claim(JwtClaimTypes.Role, "Admin")
+
+                    },
+
             },
                 new TestUser
                 {

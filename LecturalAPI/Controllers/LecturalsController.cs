@@ -41,9 +41,9 @@ namespace LecturalAPI.Controllers
        
         public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalMinInfo(int Page = 0, int pageSizeCount = 5)
         {
-            var nameIdentifier = User.Claims
+            var nameIdentifier = HttpContext.User.Claims
              .Where(x => x.Type == "scope").FirstOrDefault(c => c.Value == "api1");
-            HttpContext.
+            
             return await _lecturalService.GetAllLecturalMinInfoAsync(Page, pageSizeCount);
 
            

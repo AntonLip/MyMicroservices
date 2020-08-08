@@ -36,6 +36,7 @@ namespace IdentitySerrver4
               .AddInMemoryClients(Config.GetAllClients())
               .AddInMemoryApiResources(Config.ApiResources)
               .AddTestUsers(Config.GetUsers());
+              //.AddProfileService<CustomClaimsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
