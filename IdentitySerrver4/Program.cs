@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -35,8 +36,23 @@ namespace IdentitySerrver4
 
             try
             {
+                var seed = args.Contains("/seed");
+                if (seed)
+                {
+                    args = args.Except(new[] { "/seed"}).ToArray();
+                }
+                var host = CreateHostBuilder(args).Build();
+                if (seed)
+                {
+                    Log.Information("Seeding database ...");
+                    var config = host.Services.GetRequiredService<IConfiguration>();
+                    var connectionStringUser = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
+                    SeedData.EnsureSeedData(connectionStringUser);
+                    Log.Information("Done seeding database.");
+                    return 0;
+                }
                 Log.Information("Starting host...");
-                CreateHostBuilder(args).Build().Run();
+                host.Run();
                 return 0;
             }
             catch (Exception ex)

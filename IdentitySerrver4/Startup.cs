@@ -1,8 +1,11 @@
+using IdentitySerrver4.Data;
+using IdentitySerrver4.Models;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +31,7 @@ namespace IdentitySerrver4
         {
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
+
             const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4;trusted_connection=yes;";
             var connectionStringUser = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
 
@@ -35,7 +39,12 @@ namespace IdentitySerrver4
                 options.UseSqlServer(connectionStringUser)
              );
 
+            services.AddIdentity<AppUser, IdentityRole>()
+               .AddEntityFrameworkStores<AppDBContext>()
+               .AddDefaultTokenProviders();
+
             services.AddMvc(option => option.EnableEndpointRouting = false);
+
             services.AddCors(setup =>
             {
                 setup.AddDefaultPolicy(policy =>
@@ -46,29 +55,36 @@ namespace IdentitySerrver4
                     policy.AllowCredentials();
                 });
             });
+            //services.AddTransient<IEmailSender, EmailSender>();
             var cors = new DefaultCorsPolicyService(new LoggerFactory().CreateLogger<DefaultCorsPolicyService>())
             {
                 AllowAll = true
             };
             services.AddSingleton<ICorsPolicyService>(cors);
-            services.AddIdentityServer()
-              .AddDeveloperSigningCredential()
-              .AddInMemoryIdentityResources(Config.IdentityResources)
-              .AddInMemoryApiScopes(Config.ApiScopes)
-              .AddInMemoryClients(Config.GetAllClients())
-              .AddInMemoryApiResources(Config.ApiResources)
-              .AddTestUsers(Config.GetUsers())
-              .AddConfigurationStore(options =>
-              {
-                  options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
-                      sql => sql.MigrationsAssembly(migrationsAssembly));
-              })
+            var builer = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+                options.EmitStaticAudienceClaim = true;
+            })
+
+                .AddInMemoryPersistedGrants()               
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                        sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
               .AddOperationalStore(options =>
               {
                   options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
                       sql => sql.MigrationsAssembly(migrationsAssembly));
-              });
-            //.AddProfileService<CustomClaimsService>();
+              })
+              .AddAspNetIdentity<AppUser>();
+
+
+            builer.AddDeveloperSigningCredential();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,9 +100,6 @@ namespace IdentitySerrver4
             app.UseMvcWithDefaultRoute();
 
         }
-
-
-
         private void InitializeDatabase(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
@@ -121,6 +134,16 @@ namespace IdentitySerrver4
                     }
                     context.SaveChanges();
                 }
+                if (!context.ApiScopes.Any())
+                {
+                    foreach (var resource in Config.ApiScopes)
+                    {
+                        context.ApiScopes.Add(resource.ToEntity());
+                    }
+                    context.SaveChanges();
+
+                }
+
             }
         }
 
