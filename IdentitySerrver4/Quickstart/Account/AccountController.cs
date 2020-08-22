@@ -208,6 +208,71 @@ namespace IdentityServerHost.Quickstart.UI
             return View();
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterViewModel registerViweModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new AppUser
+                {
+                    UserName = registerViweModel.name,
+                    Email = registerViweModel.Email,
+                    PhoneNumber = registerViweModel.phoneNumber
+                };
+                var result = _userManager.CreateAsync(user, registerViweModel.Password);
+                if (result.Result.Succeeded)
+                {
+                    
+                    return RedirectToAction("Login", "Account");
+                }
+                foreach (var er in result.Result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, er.Description);
+                }
+            }
+            return View(registerViweModel);
+        }
+
+        /*****************************************/
+        /* *********REGISTER******************** */
+        /*****************************************/
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EmailInUse(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {email} is already use");
+            }
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        [AllowAnonymous]
+        public async Task<IActionResult> NameInUse(string name)
+        {
+            var user = await _userManager.FindByEmailAsync(name);
+            if (user == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Name {name} is already use");
+            }
+        }
+
 
         /*****************************************/
         /* helper APIs for the AccountController */

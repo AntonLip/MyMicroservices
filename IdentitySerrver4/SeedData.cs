@@ -1,14 +1,11 @@
 ﻿using IdentityModel;
 using IdentitySerrver4.Data;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using IdentitySerrver4.Models;
 using Microsoft.EntityFrameworkCore;
 
