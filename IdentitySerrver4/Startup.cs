@@ -63,6 +63,7 @@ namespace IdentitySerrver4
             services.AddSingleton<ICorsPolicyService>(cors);
             var builer = services.AddIdentityServer(options =>
             {
+               // options.Discovery.CustomEntries.Add("admin_api", "~/Admin");
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;

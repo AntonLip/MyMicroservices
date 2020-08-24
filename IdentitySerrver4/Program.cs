@@ -64,7 +64,7 @@ namespace IdentitySerrver4
             {
                 Log.CloseAndFlush();
             }
-            //CreateHostBuilder(args).Build().Run();
+            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
