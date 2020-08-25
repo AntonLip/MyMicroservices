@@ -239,8 +239,43 @@ namespace IdentityServerHost.Quickstart.UI
                 return Json($"Name {name} is already use");
             }
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterViewModel registerViweModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new AppUser
+                {
+                    UserName = registerViweModel.Email,
+                    Email = registerViweModel.Email,
+                    PhoneNumber = registerViweModel.phoneNumber
+                };
+                var result = _userManager.CreateAsync(user, registerViweModel.Password);
+                if (result.Result.Succeeded)
+                {
+                    if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Admin");
+                    }
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("index", "Home");
+                }
+                foreach (var er in result.Result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, er.Description);
+                }
+            }
+            return View(registerViweModel);
+        }
 
-       
+
         /*****************************************/
         /* helper APIs for the AccountController */
         /*****************************************/
