@@ -253,7 +253,7 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 var user = new AppUser
                 {
-                    UserName = registerViweModel.Email,
+                    UserName = registerViweModel.name,
                     Email = registerViweModel.Email,
                     PhoneNumber = registerViweModel.phoneNumber
                 };
@@ -265,7 +265,7 @@ namespace IdentityServerHost.Quickstart.UI
                         return RedirectToAction("ListUsers", "Admin");
                     }
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "Home");
+                    return RedirectToAction("Admin", "Admin");
                 }
                 foreach (var er in result.Result.Errors)
                 {
@@ -274,6 +274,8 @@ namespace IdentityServerHost.Quickstart.UI
             }
             return View(registerViweModel);
         }
+
+
         /*****************************************/
         /* helper APIs for the AccountController */
         /*****************************************/
