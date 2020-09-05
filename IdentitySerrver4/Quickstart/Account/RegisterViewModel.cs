@@ -13,6 +13,15 @@ namespace IdentityServerHost.Quickstart.UI
         [Required]
         public string name { get; set; }
         [Required]
+        public string middle_name { get; set; }
+        [Required]
+        public string family_name { get; set; }
+        [Required]
+        public string addres { get; set; }
+
+        public string gender { get; set; }
+
+        [Required]
         [EmailAddress]
         [Remote(action: "EmailInUse", controller: "Account")]
         public string Email { get; set; }
@@ -28,6 +37,9 @@ namespace IdentityServerHost.Quickstart.UI
 
         [Phone]
         public string phoneNumber { get; set; }
+
+
+
 
     }
 }

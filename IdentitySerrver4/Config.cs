@@ -17,9 +17,15 @@ namespace IdentitySerrver4
                 {
                     new IdentityResources.OpenId(),
                     new IdentityResources.Profile(),
-                    new IdentityResources.Email()
+                    new IdentityResources.Email(),
+                    new IdentityResources.Phone(),
+                    new IdentityResources.Address(),
+                    new IdentityResource {
+                        Name = "Role",
+                        UserClaims = new List<string> { JwtClaimTypes.Role }
+                    }
                 };
-        
+
         public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
@@ -32,8 +38,11 @@ namespace IdentitySerrver4
             {
                 new ApiResource("api1", "My API")
                 {
+                   
                 }
             };
+
+        
 
         public static List<TestUser> GetUsers()
         {
@@ -48,8 +57,8 @@ namespace IdentitySerrver4
                         new Claim(JwtClaimTypes.Name, "Alice Smith"),
                         new Claim(JwtClaimTypes.Email, "AliceSmith@email.com")
                     },
-                
-            }, 
+
+            },
                 new TestUser
             {
                 SubjectId = "3",
@@ -78,9 +87,9 @@ namespace IdentitySerrver4
                     }
                 }
             };
-                
+
         }
-        
+
         public static IEnumerable<Client> GetAllClients()
         {
             return new List<Client>
@@ -105,23 +114,25 @@ namespace IdentitySerrver4
                         {
                             new Secret("secret".Sha256())
                         },
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedGrantTypes = GrantTypes.Code,
                      AllowAccessTokensViaBrowser = true,
                     RedirectUris = { "http://localhost:3000/signin-oidc"},
                     PostLogoutRedirectUris = { "http://localhost:3000/signout-callback-oidc" },
                     AllowedScopes = new List<string>
                     {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Email,
-                    IdentityServerConstants.StandardScopes.Phone,
-                    "api1"
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Phone,
+                        IdentityServerConstants.StandardScopes.Address,
+                        "api1",
+                        "Role"
                     },
                     AllowOfflineAccess = true,
                     AlwaysSendClientClaims = true, // New Code
                     AlwaysIncludeUserClaimsInIdToken = true // New Code
                 }
             };
-         }
+        }
     }
 }
