@@ -9,11 +9,11 @@ namespace LecturalAPI.Models.dataBaseModel
 {
     public class LessonDB
     {
-        public LessonDB()
+        internal LessonDB()
         {
         }
 
-        public LessonDB(Lectural lecturalDB, DisciplineDB discipline, LessonTypeDB lessonType, LessonDTO lessonDTO) 
+        internal LessonDB(Lectural lecturalDB, DisciplineDB discipline, LessonTypeDB lessonType, LessonDTO lessonDTO) 
         {
             this.id = lessonDTO.id;
             this.name = lessonDTO.name;
@@ -39,7 +39,7 @@ namespace LecturalAPI.Models.dataBaseModel
         public string pathToMaterials { get; set; }
 
         public LessonTypeDB LessonTypeDB { get; set; }
-        public Lectural Lectural { get; set; }
+        internal Lectural Lectural { get; set; }
         public DisciplineDB Discipline { get; set; }
         public List<TimetableDB> TimetableDB { get; set; }
 

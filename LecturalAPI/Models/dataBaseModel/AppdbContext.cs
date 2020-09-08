@@ -12,7 +12,7 @@ namespace LecturalAPI.Models
 
         }
 
-        public DbSet<Lectural> Lectural { get; set; }
+        internal DbSet<Lectural> Lectural { get; set; }
         internal DbSet<CadetDB> Cadet { get; set; }
         public DbSet<DisciplineDB> Discipline { get; set; }
         public DbSet<GroupDB> Group { get; set; }
@@ -25,6 +25,7 @@ namespace LecturalAPI.Models
         public DbSet<MilitaryRank> MilitaryRank { get; set; }
         public DbSet<Position> Position { get; set; }
         public DbSet<TimetableDB> Timetable { get; set; }
-
+        internal DbSet<wifes> Wifes { get; set; }
+        internal DbSet<children> Childrens { get; set; }
     }
 }

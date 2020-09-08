@@ -11,7 +11,7 @@ namespace LecturalAPI.Models.dataTransferModel
         {
         }
 
-        public LecturalDTO(Lectural lecturalDB)
+        internal LecturalDTO(Lectural lecturalDB)
         {
             id = lecturalDB.id;
             firstName = lecturalDB.firstName;
@@ -97,7 +97,7 @@ namespace LecturalAPI.Models.dataTransferModel
         {
                 
         }
-        public LecturalMininfo(Lectural lecturalDB)
+        internal LecturalMininfo(Lectural lecturalDB)
         {
             id = lecturalDB.id;
             firstName = lecturalDB.firstName;

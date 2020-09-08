@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace LecturalAPI.Models
 {
-    public class Lectural
+    internal class Lectural
     {
         public Lectural(LecturalDTO lecturalDTO, MilitaryRank militaryRank, Position position, AcademicDegree academicDegree, AcademicTitle academicTitle)
         {
@@ -27,23 +27,41 @@ namespace LecturalAPI.Models
             AcademicTitle = academicTitle;
             AcademicDegree = academicDegree;
         }
+
+        public Guid id { get; set; }
+
         public Lectural()
         {
 
         }
-        public Guid id { get; set; }
+        #region adoutHim
         public string lastName { get; set; }
         public string firstName { get; set; }
         public string middleName { get; set; }
         public DateTime birthDay { get; set; }
         public string pathPhotoSmall { get; set; }
         public string pathPhotoBig { get; set; }
-        public string serialAndNumderMilitaryDocs { get; set; }
-        public string serialAndNumderCivilyDocs { get; set; }
-        public DateTime dateOfStartService { get; set; }
         public bool isMarried { get; set; }
-
+        public List<wifes> wife { get; set; }
+        public List<children> childrens { get; set; }
+        public DateTime dateOfStartService { get; set; }
         public int countOfChildren { get; set; }
+        #endregion
+
+        #region CivilDocs
+        public string serialAndNumderCivilyDocs { get; set; }
+        public DateTime dateOfIssue { get; set; }
+        public DateTime dateOfExpiry { get; set; }
+        public string whoGetPassport { get; set; }
+        #endregion
+
+        #region MilitaryDocs
+        public string nameOFVoinkom { get; set; }
+        public string serialAndNumderMilitaryDocs { get; set; }
+        public int FormSec { get; set; }
+        public DateTime DateFormSec { get; set; }
+        #endregion
+
         public string info { get; set; }
 
         public List<LessonDB> LessonDBs { get; set; }

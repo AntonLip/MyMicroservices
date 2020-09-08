@@ -49,7 +49,7 @@ namespace LecturalAPI.Models.dataBaseModel
 
 
 
-        public Lectural refLectural { get; set; }
+        internal Lectural refLectural { get; set; }
         public LessonDB LessonDB { get; set; }
 
         public GroupDB GroupDB { get; set; }
