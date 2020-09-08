@@ -31,6 +31,8 @@ namespace IdentitySerrver4
             new List<ApiResource>
             {
                 new ApiResource("api1", "My API")
+                {
+                }
             };
 
         public static List<TestUser> GetUsers()
@@ -105,7 +107,6 @@ namespace IdentitySerrver4
                         },
                     AllowedGrantTypes = GrantTypes.Implicit,
                      AllowAccessTokensViaBrowser = true,
-
                     RedirectUris = { "http://localhost:3000/signin-oidc"},
                     PostLogoutRedirectUris = { "http://localhost:3000/signout-callback-oidc" },
                     AllowedScopes = new List<string>
@@ -113,8 +114,12 @@ namespace IdentitySerrver4
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
+                    IdentityServerConstants.StandardScopes.Phone,
                     "api1"
-                    }
+                    },
+                    AllowOfflineAccess = true,
+                    AlwaysSendClientClaims = true, // New Code
+                    AlwaysIncludeUserClaimsInIdToken = true // New Code
                 }
             };
          }
