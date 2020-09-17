@@ -14,8 +14,8 @@ using System.Security.Claims;
 namespace LecturalAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
+    //[ApiController]
+    //[Authorize]
     public class LecturalsController : ControllerBase
     {
        

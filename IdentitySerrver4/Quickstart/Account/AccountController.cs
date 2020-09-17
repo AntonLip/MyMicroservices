@@ -255,7 +255,11 @@ namespace IdentityServerHost.Quickstart.UI
                 {
                     UserName = registerViweModel.name,
                     Email = registerViweModel.Email,
-                    PhoneNumber = registerViweModel.phoneNumber
+                    PhoneNumber = registerViweModel.phoneNumber,
+                    gender = registerViweModel.gender,
+                    middle_name = registerViweModel.middle_name,
+                    family_name = registerViweModel.family_name,
+                    address =registerViweModel.addres
                 };
                 var result = _userManager.CreateAsync(user, registerViweModel.Password);
                 if (result.Result.Succeeded)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LecturalAPI.Models.dataBaseModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace LecturalAPI.Models.dataTransferModel
         {
         }
 
-        public LecturalDTO(Lectural lecturalDB)
+        internal LecturalDTO(Lectural lecturalDB)
         {
             id = lecturalDB.id;
             firstName = lecturalDB.firstName;
@@ -26,6 +27,14 @@ namespace LecturalAPI.Models.dataTransferModel
             isMarried = lecturalDB.isMarried;
             countOfChildren = lecturalDB.countOfChildren;
             info = lecturalDB.info;
+            serialAndNumderCivilyDocs = lecturalDB.serialAndNumderCivilyDocs;
+            dateOfIssue = lecturalDB.dateOfIssue;
+            dateOfExpiry = lecturalDB.dateOfExpiry;
+            whoGetPassport = lecturalDB.whoGetPassport;
+            nameOFVoinkom = lecturalDB.nameOFVoinkom;
+            serialAndNumderMilitaryDocs = lecturalDB.serialAndNumderMilitaryDocs;
+            FormSec = lecturalDB.FormSec;
+            DateFormSec = lecturalDB.DateFormSec;
             if (lecturalDB.MilitaryRank == null)
             {
                 MilitaryRank = "none";
@@ -71,18 +80,31 @@ namespace LecturalAPI.Models.dataTransferModel
         public DateTime birthDay { get; set; }
         public string pathPhotoSmall { get; set; }
         public string pathPhotoBig { get; set; }
-        public string serialAndNumderMilitaryDocs { get; set; }
-        public string serialAndNumderCivilyDocs { get; set; }
         public DateTime dateOfStartService { get; set; }
-        public bool isMarried { get; set; }
-
-        public int countOfChildren { get; set; }
-        public string info { get; set; }
 
         public string MilitaryRank { get; set; }
         public string Position { get; set; }
         public string AcademicTitle { get; set; }
         public string AcademicDegree { get; set; }
+
+        public int countOfChildren { get; set; }
+        public string info { get; set; }
+
+        public bool isMarried { get; set; }
+
+
+        
+        public string serialAndNumderCivilyDocs { get; set; }
+        public DateTime dateOfIssue { get; set; }
+        public DateTime dateOfExpiry { get; set; }
+        public string whoGetPassport { get; set; }
+       
+        public string nameOFVoinkom { get; set; }
+        public string serialAndNumderMilitaryDocs { get; set; }
+        public int FormSec { get; set; }
+        public DateTime DateFormSec { get; set; }
+
+       
 
 
 
@@ -97,7 +119,7 @@ namespace LecturalAPI.Models.dataTransferModel
         {
                 
         }
-        public LecturalMininfo(Lectural lecturalDB)
+        internal LecturalMininfo(Lectural lecturalDB)
         {
             id = lecturalDB.id;
             firstName = lecturalDB.firstName;

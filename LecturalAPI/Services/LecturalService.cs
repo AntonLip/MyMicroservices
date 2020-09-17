@@ -220,7 +220,7 @@ namespace LecturalAPI.Services
             Position position = await _context.Position.Where(c => c.name == lecturalDTO.Position).FirstOrDefaultAsync();
             AcademicDegree academicDegree = await _context.AcademicDegree.Where(c => c.name == lecturalDTO.AcademicDegree).FirstOrDefaultAsync();
             AcademicTitle academicTitle = await _context.AcademicTitle.Where(c => c.name == lecturalDTO.AcademicTitle).FirstOrDefaultAsync();
-
+            
 
             Lectural newLecture = new Lectural(lecturalDTO, militaryRank, position, academicDegree, academicTitle);
 
