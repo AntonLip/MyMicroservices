@@ -89,11 +89,15 @@ namespace LecturalAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<LecturalDTO>> PostLectural(LecturalDTO lectural)
+        public async Task<ActionResult<LecturalDTO>> PostLectural([FromBody]LecturalDTO lectural)
         {
-            var lec =  await _lecturalService.AddLecturalAsync(lectural);
-         
-            return CreatedAtAction("GetLectural", new { id = lec.id }, lec);
+            if (ModelState.IsValid)
+            {
+                var lec = await _lecturalService.AddLecturalAsync(lectural);
+                return CreatedAtAction("GetLectural", new { id = lec.id }, lec);
+            }
+            return BadRequest();
+
         }
 
         // DELETE: api/Lecturals/5

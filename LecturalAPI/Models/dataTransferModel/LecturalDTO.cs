@@ -27,12 +27,10 @@ namespace LecturalAPI.Models.dataTransferModel
             isMarried = lecturalDB.isMarried;
             countOfChildren = lecturalDB.countOfChildren;
             info = lecturalDB.info;
-            serialAndNumderCivilyDocs = lecturalDB.serialAndNumderCivilyDocs;
             dateOfIssue = lecturalDB.dateOfIssue;
             dateOfExpiry = lecturalDB.dateOfExpiry;
             whoGetPassport = lecturalDB.whoGetPassport;
             nameOFVoinkom = lecturalDB.nameOFVoinkom;
-            serialAndNumderMilitaryDocs = lecturalDB.serialAndNumderMilitaryDocs;
             FormSec = lecturalDB.FormSec;
             DateFormSec = lecturalDB.DateFormSec;
             if (lecturalDB.MilitaryRank == null)

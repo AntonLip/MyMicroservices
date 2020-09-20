@@ -26,6 +26,12 @@ namespace LecturalAPI.Models
             Position = position;
             AcademicTitle = academicTitle;
             AcademicDegree = academicDegree;
+            whoGetPassport = lecturalDTO.whoGetPassport;
+            nameOFVoinkom = lecturalDTO.nameOFVoinkom;
+            FormSec = lecturalDTO.FormSec;
+            DateFormSec = lecturalDTO.DateFormSec;
+            dateOfExpiry = lecturalDTO.dateOfExpiry;
+            dateOfIssue = lecturalDTO.dateOfIssue;
         }
 
         public Guid id { get; set; }
