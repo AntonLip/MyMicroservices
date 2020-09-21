@@ -27,6 +27,7 @@ namespace LecturalAPI.Controllers
             _lecturalService = new LecturalService(context);
         }
 
+        #region GET_REQUEST
         // GET: api/Lecturals
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LecturalDTO>>> GetLectural(int Page = 0, int pageSizeCount = 5)
@@ -37,17 +38,12 @@ namespace LecturalAPI.Controllers
         }
 
         // GET: api/Lecturals
-       [Route("Min")]
-       
+        [Route("Min")]
         public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalMinInfo(int Page = 0, int pageSizeCount = 5)
         {
             var nameIdentifier = HttpContext.User.Claims
              .Where(x => x.Type == "scope").FirstOrDefault(c => c.Value == "api1");
-            
             return await _lecturalService.GetAllLecturalMinInfoAsync(Page, pageSizeCount);
-
-           
-
             //return await _context.Lectural.ToListAsync();
             //return await _context.Lectural.Skip(Page * pageSizeCount).Take(pageSizeCount).ToListAsync();
         }
@@ -64,6 +60,37 @@ namespace LecturalAPI.Controllers
 
             return lectural;
         }
+
+
+        [Route("filtered")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalFiltered(string firstName, string middleName, string lastName,
+                                                                              string militaryRank, string position, string academicTitle,
+                                                                              string academicDegree, string formSec)
+        {
+            if (ModelState.IsValid)
+            {
+                var lectural = await _lecturalService.GetAllLecturalFilterdAsync(firstName, middleName, lastName,
+                                                                         militaryRank, position, academicTitle,
+                                                                         academicDegree, formSec);
+                if (lectural == null)
+                {
+                    return NotFound();
+                }
+
+                return lectural;
+            }
+            return BadRequest();
+        }
+        #endregion
+
+
+
+
+      
+
+
+
 
         // PUT: api/Lecturals/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -84,6 +111,7 @@ namespace LecturalAPI.Controllers
 
             return NotFound();
         }
+
 
         // POST: api/Lecturals
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
