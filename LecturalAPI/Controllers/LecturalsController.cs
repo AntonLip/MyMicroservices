@@ -130,14 +130,14 @@ namespace LecturalAPI.Controllers
 
         // DELETE: api/Lecturals/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<LecturalDTO>> DeleteLectural(Guid id)
+        public async Task<ActionResult<Guid>> DeleteLectural(Guid id)
         {
             var lectural = await _lecturalService.DeleteLectureAsync(id);
             if (lectural == null)
             {
                 return NotFound();
             }
-            return lectural;
+            return lectural.id;
         }
 
        
