@@ -1,5 +1,6 @@
 using IdentitySerrver4.Data;
 using IdentitySerrver4.Models;
+using IdentitySerrver4.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Services;
@@ -44,7 +45,7 @@ namespace IdentitySerrver4
                .AddDefaultTokenProviders();
 
             services.AddMvc(option => option.EnableEndpointRouting = false);
-
+            
             services.AddCors(setup =>
             {
                 setup.AddDefaultPolicy(policy =>
@@ -55,6 +56,7 @@ namespace IdentitySerrver4
                     policy.AllowCredentials();
                 });
             });
+            services.AddScoped<IProfileService, ProfileService>();
             //services.AddTransient<IEmailSender, EmailSender>();
             var cors = new DefaultCorsPolicyService(new LoggerFactory().CreateLogger<DefaultCorsPolicyService>())
             {
@@ -70,7 +72,7 @@ namespace IdentitySerrver4
                 options.Events.RaiseSuccessEvents = true;
                 options.EmitStaticAudienceClaim = true;
             })
-
+                
                 .AddInMemoryPersistedGrants()               
                 .AddConfigurationStore(options =>
                 {

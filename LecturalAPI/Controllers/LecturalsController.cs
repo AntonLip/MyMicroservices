@@ -32,6 +32,7 @@ namespace LecturalAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LecturalDTO>>> GetLectural(int Page = 0, int pageSizeCount = 5)
         {
+            
             //return await _context.Lectural.ToListAsync();
             //return await _context.Lectural.Skip(Page * pageSizeCount).Take(pageSizeCount).ToListAsync();
             return await _lecturalService.GetAllLecturalAsync(Page, pageSizeCount);

@@ -20,7 +20,7 @@ namespace LecturalAPI.Services
         }
         public async Task<List<LecturalDTO>> GetAllLecturalAsync(int Page = 0, int pageSizeCount = 5)
         {
-
+            int cnt = _context.Lectural.Local.Count();
             var lectural = await _context.Lectural.Include(c => c.Position)
                                                   .Include(c => c.MilitaryRank)
                                                   .Include(c => c.AcademicTitle)

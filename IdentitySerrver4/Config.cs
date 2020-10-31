@@ -23,6 +23,14 @@ namespace IdentitySerrver4
                     new IdentityResource {
                         Name = "Role",
                         UserClaims = new List<string> { JwtClaimTypes.Role }
+                    },
+                    new IdentityResource {
+                        Name = "FamilyName",
+                        UserClaims = new List<string> { JwtClaimTypes.FamilyName }
+                    },
+                    new IdentityResource {
+                        Name = "Gender",
+                        UserClaims = new List<string> { JwtClaimTypes.Gender }
                     }
                 };
 
@@ -126,7 +134,9 @@ namespace IdentitySerrver4
                         IdentityServerConstants.StandardScopes.Phone,
                         IdentityServerConstants.StandardScopes.Address,
                         "api1",
-                        "Role"
+                        "Role",
+                        "FamilyName",
+                        "Gender"
                     },
                     AllowOfflineAccess = true,
                     AlwaysSendClientClaims = true, // New Code
