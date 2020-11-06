@@ -87,7 +87,6 @@ namespace LecturalAPI.Controllers
             return CreatedAtAction("GetDisciplineDB", new { id = disciplineDB.id }, disciplineDB);
         }
 
-        // DELETE: api/DisciplineDBs/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<DisciplineDB>> DeleteDisciplineDB(Guid id)
         {

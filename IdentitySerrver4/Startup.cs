@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
 
@@ -27,6 +28,7 @@ namespace IdentitySerrver4
         {
             Environment = environment;
             Configuration = configuration;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
         public void ConfigureServices(IServiceCollection services)
         {
@@ -36,7 +38,7 @@ namespace IdentitySerrver4
             const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4;trusted_connection=yes;";
             var connectionStringUser = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
 
-            services.AddDbContext<Data.AppDBContext>(options =>
+            services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(connectionStringUser)
              );
 

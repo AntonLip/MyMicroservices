@@ -4,6 +4,7 @@
 
 using IdentityModel;
 using IdentitySerrver4.Models;
+using IdentitySerrver4.Quickstart;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServerHost.Quickstart.UI
@@ -34,6 +36,7 @@ namespace IdentityServerHost.Quickstart.UI
         public AccountController(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
+            
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
@@ -259,11 +262,24 @@ namespace IdentityServerHost.Quickstart.UI
                     Gender = registerViweModel.gender,
                     MiddleName = registerViweModel.middle_name,
                     FamilyName = registerViweModel.family_name,
-                    address =registerViweModel.addres
+                    address =registerViweModel.addres,
+                    
+
                 };
+                ClaimStore claimStore = new ClaimStore(registerViweModel.family_name,
+                                                        registerViweModel.gender,
+                                                        registerViweModel.addres,
+                                                         registerViweModel.name,
+                                                         registerViweModel.middle_name);
+                claimStore.SetClaims();
                 var result = _userManager.CreateAsync(user, registerViweModel.Password);
                 if (result.Result.Succeeded)
                 {
+                    foreach ( var c in claimStore) 
+                    {
+                        var res = _userManager.AddClaimAsync(user, (Claim)c);
+                    }
+
                     if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Admin");

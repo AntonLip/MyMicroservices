@@ -25,8 +25,16 @@ namespace IdentitySerrver4
                         UserClaims = new List<string> { JwtClaimTypes.Role }
                     },
                     new IdentityResource {
-                        Name = "FamilyName",
+                        Name = "family_name",
                         UserClaims = new List<string> { JwtClaimTypes.FamilyName }
+                    },
+                    new IdentityResource {
+                        Name = "given_name",
+                        UserClaims = new List<string> { JwtClaimTypes.GivenName }
+                    },
+                     new IdentityResource {
+                        Name = "middle_name",
+                        UserClaims = new List<string> { JwtClaimTypes.MiddleName }
                     },
                     new IdentityResource {
                         Name = "Gender",
@@ -123,7 +131,7 @@ namespace IdentitySerrver4
                             new Secret("secret".Sha256())
                         },
                     AllowedGrantTypes = GrantTypes.Code,
-                     AllowAccessTokensViaBrowser = true,
+                    AllowAccessTokensViaBrowser = true,
                     RedirectUris = { "http://localhost:3000/signin-oidc"},
                     PostLogoutRedirectUris = { "http://localhost:3000/signout-callback-oidc" },
                     AllowedScopes = new List<string>
@@ -135,7 +143,9 @@ namespace IdentitySerrver4
                         IdentityServerConstants.StandardScopes.Address,
                         "api1",
                         "Role",
-                        "FamilyName",
+                        "family_name",
+                        "given_name",
+                        "middle_name",
                         "Gender"
                     },
                     AllowOfflineAccess = true,
