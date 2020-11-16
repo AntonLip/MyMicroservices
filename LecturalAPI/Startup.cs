@@ -22,7 +22,6 @@ namespace LecturalAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             IdentityModelEventSource.ShowPII = true;
@@ -38,7 +37,7 @@ namespace LecturalAPI
             services.AddDbContextPool<AppdbContext>(opts =>
                 opts.UseSqlServer("server = (localDB)\\MSSQLLocalDB; database=WebDepartment; Trusted_Connection = true")
             );
-
+            services.AddHttpContextAccessor();
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();
@@ -71,9 +70,6 @@ namespace LecturalAPI
                     policy.RequireClaim("scope", "api1");
                 });
             });
-
-
-
 
         }
 
