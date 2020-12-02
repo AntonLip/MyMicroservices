@@ -90,7 +90,6 @@ namespace LecturalAPI.Controllers
 
         #endregion
 
-
         #region PUT
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDisciplineDB(Guid id, DisciplineDB disciplineDB)
@@ -123,9 +122,6 @@ namespace LecturalAPI.Controllers
 
         #endregion
 
-
-
-
         #region DELETE
         [HttpDelete("{id}")]
         public async Task<ActionResult<DisciplineDB>> DeleteDisciplineDB(Guid id)
@@ -144,11 +140,10 @@ namespace LecturalAPI.Controllers
 
         #endregion
         
-
-
         private bool DisciplineDBExists(Guid id)
         {
             return _context.Discipline.Any(e => e.id == id);
         }
+    
     }
 }

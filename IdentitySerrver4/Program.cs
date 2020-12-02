@@ -57,14 +57,13 @@ namespace IdentitySerrver4
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly.");
-                return 1;
+                Log.Fatal(ex, "Host terminated unexpectedly.");   
             }
             finally
             {
                 Log.CloseAndFlush();
             }
-            
+            return 0;
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
