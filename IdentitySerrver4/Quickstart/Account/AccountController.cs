@@ -232,7 +232,7 @@ namespace IdentityServerHost.Quickstart.UI
         [AllowAnonymous]
         public async Task<IActionResult> NameInUse(string name)
         {
-            var user = await _userManager.FindByEmailAsync(name);
+            var user = await _userManager.FindByNameAsync(name);
             if (user == null)
             {
                 return Json(true);
@@ -242,6 +242,8 @@ namespace IdentityServerHost.Quickstart.UI
                 return Json($"Name {name} is already use");
             }
         }
+
+      
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
@@ -256,10 +258,10 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 var user = new AppUser
                 {
-                    UserName = registerViweModel.name,
+                    UserName = registerViweModel.UserName,                    
                     Email = registerViweModel.Email,
                     PhoneNumber = registerViweModel.phoneNumber,
-                    Gender = registerViweModel.gender,
+                    Gender = registerViweModel.position,
                     MiddleName = registerViweModel.middle_name,
                     FamilyName = registerViweModel.family_name,
                     address =registerViweModel.addres,
@@ -267,9 +269,9 @@ namespace IdentityServerHost.Quickstart.UI
 
                 };
                 ClaimStore claimStore = new ClaimStore(registerViweModel.family_name,
-                                                        registerViweModel.gender,
+                                                        registerViweModel.position,
                                                         registerViweModel.addres,
-                                                         registerViweModel.name,
+                                                         registerViweModel.given_name,
                                                          registerViweModel.middle_name);
                 claimStore.SetClaims();
                 var result = _userManager.CreateAsync(user, registerViweModel.Password);

@@ -35,8 +35,10 @@ namespace IdentitySerrver4
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
-            const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4;trusted_connection=yes;";
-            var connectionStringUser = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
+            var connectionString = Configuration["ConnectionStrings:connectionStringIS4"];
+            //@"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4;trusted_connection=yes;";
+            var connectionStringUser = Configuration["ConnectionStrings:connectionStringUser"];
+            //@"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
 
             services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(connectionStringUser)
@@ -47,7 +49,7 @@ namespace IdentitySerrver4
                .AddDefaultTokenProviders();
 
             services.AddMvc(option => option.EnableEndpointRouting = false);
-            
+
             services.AddCors(setup =>
             {
                 setup.AddDefaultPolicy(policy =>
@@ -67,15 +69,15 @@ namespace IdentitySerrver4
             services.AddSingleton<ICorsPolicyService>(cors);
             var builer = services.AddIdentityServer(options =>
             {
-               // options.Discovery.CustomEntries.Add("admin_api", "~/Admin");
+                // options.Discovery.CustomEntries.Add("admin_api", "~/Admin");
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
                 options.EmitStaticAudienceClaim = true;
             })
-                
-                .AddInMemoryPersistedGrants()               
+
+                .AddInMemoryPersistedGrants()
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
@@ -146,11 +148,9 @@ namespace IdentitySerrver4
                         context.ApiScopes.Add(resource.ToEntity());
                     }
                     context.SaveChanges();
-
                 }
 
             }
         }
-
     }
 }

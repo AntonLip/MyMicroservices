@@ -37,8 +37,12 @@ namespace IdentitySerrver4
                         UserClaims = new List<string> { JwtClaimTypes.MiddleName }
                     },
                     new IdentityResource {
-                        Name = "Gender",
-                        UserClaims = new List<string> { JwtClaimTypes.Gender }
+                        Name = "position",
+                        UserClaims = new List<string> { "position" }
+                    },
+                    new IdentityResource {
+                        Name = "picture",
+                        UserClaims = new List<string> { JwtClaimTypes.Picture }
                     }
                 };
 
@@ -146,7 +150,8 @@ namespace IdentitySerrver4
                         "family_name",
                         "given_name",
                         "middle_name",
-                        "Gender"
+                        "position",
+                        "picture"
                     },
                     AllowOfflineAccess = true,
                     AlwaysSendClientClaims = true, // New Code

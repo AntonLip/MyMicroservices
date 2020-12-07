@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace IdentitySerrver4.Quickstart.Admin
 {
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin")]
     [Route("Admin")]
     public class AdminController : Controller
     {
