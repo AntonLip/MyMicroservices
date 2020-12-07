@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20201031104216_AddToDisciplinesFiles")]
+    partial class AddToDisciplinesFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,12 +113,6 @@ namespace LecturalAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("countHoursSWZ")
-                        .HasColumnType("int");
-
-                    b.Property<int>("countHoursTest")
-                        .HasColumnType("int");
-
-                    b.Property<int>("countHoursСontrolWork")
                         .HasColumnType("int");
 
                     b.Property<int>("countNorm")

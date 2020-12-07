@@ -4,6 +4,7 @@
 
 using IdentityModel;
 using IdentitySerrver4.Models;
+using IdentitySerrver4.Quickstart;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServerHost.Quickstart.UI
@@ -34,6 +36,7 @@ namespace IdentityServerHost.Quickstart.UI
         public AccountController(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
+            
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
@@ -229,7 +232,7 @@ namespace IdentityServerHost.Quickstart.UI
         [AllowAnonymous]
         public async Task<IActionResult> NameInUse(string name)
         {
-            var user = await _userManager.FindByEmailAsync(name);
+            var user = await _userManager.FindByNameAsync(name);
             if (user == null)
             {
                 return Json(true);
@@ -239,6 +242,8 @@ namespace IdentityServerHost.Quickstart.UI
                 return Json($"Name {name} is already use");
             }
         }
+
+      
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
@@ -253,17 +258,30 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 var user = new AppUser
                 {
-                    UserName = registerViweModel.name,
+                    UserName = registerViweModel.UserName,                    
                     Email = registerViweModel.Email,
                     PhoneNumber = registerViweModel.phoneNumber,
-                    gender = registerViweModel.gender,
-                    middle_name = registerViweModel.middle_name,
-                    family_name = registerViweModel.family_name,
-                    address =registerViweModel.addres
+                    Gender = registerViweModel.position,
+                    MiddleName = registerViweModel.middle_name,
+                    FamilyName = registerViweModel.family_name,
+                    address =registerViweModel.addres,
+                    
+
                 };
+                ClaimStore claimStore = new ClaimStore(registerViweModel.family_name,
+                                                        registerViweModel.position,
+                                                        registerViweModel.addres,
+                                                         registerViweModel.given_name,
+                                                         registerViweModel.middle_name);
+                claimStore.SetClaims();
                 var result = _userManager.CreateAsync(user, registerViweModel.Password);
                 if (result.Result.Succeeded)
                 {
+                    foreach ( var c in claimStore) 
+                    {
+                        var res = _userManager.AddClaimAsync(user, (Claim)c);
+                    }
+
                     if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Admin");

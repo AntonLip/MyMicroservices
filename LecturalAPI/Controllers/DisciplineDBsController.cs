@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LecturalAPI.Models;
 using LecturalAPI.Services;
+using LecturalAPI.Models.dataBaseModel;
+using Microsoft.AspNetCore.Hosting;
+using System.Net.Http;
+using Microsoft.Web.Helpers;
+using System.IO;
 
 namespace LecturalAPI.Controllers
 {
@@ -16,17 +21,32 @@ namespace LecturalAPI.Controllers
     {
         private readonly AppdbContext _context;
         private readonly DisciplinesService _disciplineService;
-        public DisciplineDBsController(AppdbContext context)
+        IWebHostEnvironment _webHost;
+        public DisciplineDBsController(AppdbContext context, IWebHostEnvironment webHost)
         {
             _context = context;
-            _disciplineService = new DisciplinesService(context);
+            _webHost = webHost;
+            _disciplineService = new DisciplinesService(context,webHost);
         }
 
+        #region GET
         // GET: api/DisciplineDBs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DisciplineDB>>> GetDiscipline()
+        public async Task<ActionResult<IEnumerable<DisciplineDTOTimetable>>> GetDiscipline()
         {
-            return await _context.Discipline.ToListAsync();
+            var disc = await _context.Discipline.ToListAsync();
+            if (disc != null) 
+            {
+                List<DisciplineDTOTimetable> disciplineDTOTimetable = new List<DisciplineDTOTimetable>();
+
+                foreach (var d in disc)
+                {
+                    disciplineDTOTimetable.Add(new DisciplineDTOTimetable(d));
+                }
+
+                return disciplineDTOTimetable;
+            }
+            return NoContent();
         }
 
         // GET: api/DisciplineDBs/5
@@ -42,9 +62,35 @@ namespace LecturalAPI.Controllers
             return d;
         }
 
-        // PUT: api/DisciplineDBs/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        #endregion
+
+        #region Post
+        [HttpPost]
+        public async Task<ActionResult<DisciplineDTOTimetable>> PostDisciplineDB(DisciplineDTOTimetable discipline)
+        {
+           
+            var d = await _disciplineService.AddDisciplineAsync(discipline);
+            /* _context.Discipline.Add(disciplineDB);
+             await _context.SaveChangesAsync();*/
+
+            return CreatedAtAction("GetDisciplineDB", new { id = discipline.id }, discipline);
+        }
+
+        [HttpPost]
+        [Route("uploadfile")]
+        public async Task<ActionResult> PostUploadFilesAsync(Guid id, [FromForm] IFormFile body)
+        {
+          
+            await _disciplineService.AddPlan(id, body);
+
+            return Ok();
+        }
+
+
+
+        #endregion
+
+        #region PUT
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDisciplineDB(Guid id, DisciplineDB disciplineDB)
         {
@@ -74,20 +120,9 @@ namespace LecturalAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/DisciplineDBs
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<DisciplineDTOTimetable>> PostDisciplineDB(DisciplineDTOTimetable disciplineDB)
-        {
-            var d = await _disciplineService.AddDisciplineAsync(disciplineDB);
-           /* _context.Discipline.Add(disciplineDB);
-            await _context.SaveChangesAsync();*/
+        #endregion
 
-            return CreatedAtAction("GetDisciplineDB", new { id = disciplineDB.id }, disciplineDB);
-        }
-
-        // DELETE: api/DisciplineDBs/5
+        #region DELETE
         [HttpDelete("{id}")]
         public async Task<ActionResult<DisciplineDB>> DeleteDisciplineDB(Guid id)
         {
@@ -103,9 +138,12 @@ namespace LecturalAPI.Controllers
             return disciplineDB;
         }
 
+        #endregion
+        
         private bool DisciplineDBExists(Guid id)
         {
             return _context.Discipline.Any(e => e.id == id);
         }
+    
     }
 }

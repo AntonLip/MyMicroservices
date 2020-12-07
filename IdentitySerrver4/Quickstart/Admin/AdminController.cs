@@ -1,4 +1,5 @@
-﻿using IdentitySerrver4.Models;
+﻿using IdentityModel;
+using IdentitySerrver4.Models;
 using IdentityServerHost.Quickstart.UI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentitySerrver4.Quickstart.Admin
@@ -16,6 +18,9 @@ namespace IdentitySerrver4.Quickstart.Admin
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+
+        
+
         public AdminController(
             UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager)
@@ -388,8 +393,63 @@ namespace IdentitySerrver4.Quickstart.Admin
         #endregion
 
         #region CLAIMS
+        [Route("ManageUserClaims")]
+        [HttpGet]
+        public async Task<IActionResult> ManageUserClaims(string Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"user with Id = {Id} not fount";
+                return View("Error/NotFound");
+            }
+            var existingUserClaims = await _userManager.GetClaimsAsync(user);
+            var model = new EditUserClaimsViewModel
+            {
+                UserId = Id
+            };
+            foreach (Claim claim in ClaimStore.AllClaims)
+            {
+                UserClaims userClaims = new UserClaims
+                {
+                    ClaimType = claim.Type
+                };
+                if (existingUserClaims.Any(c => c.Type == claim.Type))
+                {
+                    userClaims.IsSelected = true;
+                }
+                model.Claims.Add(userClaims);
+            }
 
 
+            return View(model);
+        }
+        [Route("ManageUserClaims")]
+
+        [HttpPost]
+        public async Task<IActionResult> ManageUserClaims(EditUserClaimsViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"user with Id = {model.UserId} not fount";
+                return View("Error/NotFound");
+            }
+            var claims = await _userManager.GetClaimsAsync(user);
+            var result = await _userManager.RemoveClaimsAsync(user, claims);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot remove roles");
+                return View(model);
+            }
+            result = await _userManager.AddClaimsAsync(user, model.Claims.Where(x => x.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot add roles");
+                return View(model);
+            }
+            return RedirectToAction("EditUser", new { Id = model.UserId });
+        }
 
         #endregion
 

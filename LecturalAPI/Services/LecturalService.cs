@@ -1,6 +1,7 @@
 ﻿using LecturalAPI.Models;
 using LecturalAPI.Models.dataBaseModel;
 using LecturalAPI.Models.dataTransferModel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace LecturalAPI.Services
         }
         public async Task<List<LecturalDTO>> GetAllLecturalAsync(int Page = 0, int pageSizeCount = 5)
         {
-
+            int cnt = _context.Lectural.Local.Count();
             var lectural = await _context.Lectural.Include(c => c.Position)
                                                   .Include(c => c.MilitaryRank)
                                                   .Include(c => c.AcademicTitle)
@@ -70,6 +71,106 @@ namespace LecturalAPI.Services
 
             return null;
         }
+
+        internal async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetAllLecturalFilterdAsync(string firstName, string middleName, string lastName,
+                                                                                                   string militaryRank, string position, string academicTitle,
+                                                                                                   string academicDegree, string formSec)
+        {
+            List<string> lists = new List<string>();
+            lists.Add(firstName);
+            lists.Add(middleName);
+            lists.Add(lastName);
+            lists.Add(militaryRank);
+            lists.Add(position);
+            lists.Add(academicTitle);
+            lists.Add(academicDegree);
+            lists.Add(formSec);
+            List<Lectural> lecturals = new List<Lectural>();
+            int cnt = 0;
+            foreach (var p in lists)
+            {
+                if (p != "undefined")
+                {
+                    switch (cnt)
+                    {
+                        case 0:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.firstName == p).ToList();
+                                break;
+                            }
+                            else
+                            {
+                                lecturals = await _context.Lectural.Where(c => c.firstName == p).ToListAsync();
+                                break;
+                            }
+                        case 1:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.middleName == p).ToList(); break;
+                            }
+
+                            lecturals = await _context.Lectural.Where(c => c.middleName == p).ToListAsync(); break;
+                        case 2:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.lastName == p).ToList(); break;
+                            }
+                            lecturals = await _context.Lectural.Where(c => c.lastName == p).ToListAsync(); break;
+
+                        case 3:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.MilitaryRank.name == p).ToList(); break;
+                            }
+                            lecturals = await _context.Lectural.Where(c => c.MilitaryRank.name == p).ToListAsync(); break;
+
+                        case 4:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.Position.name == p).ToList(); break;
+                            }
+                            lecturals = await _context.Lectural.Where(c => c.Position.name == p).ToListAsync(); break;
+
+                        case 5:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.AcademicTitle.name == p).ToList(); break;
+                            }
+                            lecturals = await _context.Lectural.Where(c => c.AcademicTitle.name == p).ToListAsync(); break;
+
+                        case 6:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.AcademicDegree.name == p).ToList(); break;
+                            }
+                            lecturals = await _context.Lectural.Where(c => c.AcademicDegree.name == p).ToListAsync(); break;
+
+                        case 7:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.FormSec == Int32.Parse(p)).ToList(); break;
+                            }
+                            lecturals = await _context.Lectural.Where(c => c.FormSec == Int32.Parse(p)).ToListAsync(); break;
+
+                        default: break;
+
+                    }
+
+                }
+                cnt++;
+            }
+            if (lecturals == null)
+                return null;
+            var lecturalDTO = new List<LecturalMininfo>();
+            foreach (var l in lecturals)
+            {
+                lecturalDTO.Add(new LecturalMininfo(l));
+            }
+
+            return lecturalDTO;
+        }
+
         public async Task<LecturalDTO> UpdateLecturalAsync(Guid id, LecturalDTO lecturalDTO)
         {
             var lectural = await _context.Lectural.Where(c => c.id == id)
@@ -220,7 +321,7 @@ namespace LecturalAPI.Services
             Position position = await _context.Position.Where(c => c.name == lecturalDTO.Position).FirstOrDefaultAsync();
             AcademicDegree academicDegree = await _context.AcademicDegree.Where(c => c.name == lecturalDTO.AcademicDegree).FirstOrDefaultAsync();
             AcademicTitle academicTitle = await _context.AcademicTitle.Where(c => c.name == lecturalDTO.AcademicTitle).FirstOrDefaultAsync();
-            
+
 
             Lectural newLecture = new Lectural(lecturalDTO, militaryRank, position, academicDegree, academicTitle);
 

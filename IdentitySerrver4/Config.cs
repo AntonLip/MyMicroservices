@@ -23,6 +23,26 @@ namespace IdentitySerrver4
                     new IdentityResource {
                         Name = "Role",
                         UserClaims = new List<string> { JwtClaimTypes.Role }
+                    },
+                    new IdentityResource {
+                        Name = "family_name",
+                        UserClaims = new List<string> { JwtClaimTypes.FamilyName }
+                    },
+                    new IdentityResource {
+                        Name = "given_name",
+                        UserClaims = new List<string> { JwtClaimTypes.GivenName }
+                    },
+                     new IdentityResource {
+                        Name = "middle_name",
+                        UserClaims = new List<string> { JwtClaimTypes.MiddleName }
+                    },
+                    new IdentityResource {
+                        Name = "position",
+                        UserClaims = new List<string> { "position" }
+                    },
+                    new IdentityResource {
+                        Name = "picture",
+                        UserClaims = new List<string> { JwtClaimTypes.Picture }
                     }
                 };
 
@@ -115,7 +135,7 @@ namespace IdentitySerrver4
                             new Secret("secret".Sha256())
                         },
                     AllowedGrantTypes = GrantTypes.Code,
-                     AllowAccessTokensViaBrowser = true,
+                    AllowAccessTokensViaBrowser = true,
                     RedirectUris = { "http://localhost:3000/signin-oidc"},
                     PostLogoutRedirectUris = { "http://localhost:3000/signout-callback-oidc" },
                     AllowedScopes = new List<string>
@@ -126,7 +146,12 @@ namespace IdentitySerrver4
                         IdentityServerConstants.StandardScopes.Phone,
                         IdentityServerConstants.StandardScopes.Address,
                         "api1",
-                        "Role"
+                        "Role",
+                        "family_name",
+                        "given_name",
+                        "middle_name",
+                        "position",
+                        "picture"
                     },
                     AllowOfflineAccess = true,
                     AlwaysSendClientClaims = true, // New Code

@@ -1,4 +1,5 @@
 ﻿using IdentityServer4.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,20 @@ namespace IdentityServerHost.Quickstart.UI
     public class RegisterViewModel
     {
         [Required]
-        public string name { get; set; }
+        [Remote(action: "NameInUse", controller: "Account")]
+        public string UserName { get; set; }
+        [Required]
+        public string given_name { get; set; }
         [Required]
         public string middle_name { get; set; }
         [Required]
         public string family_name { get; set; }
         [Required]
         public string addres { get; set; }
+        [Required]
+        public string position { get; set; }
 
-        public string gender { get; set; }
+
 
         [Required]
         [EmailAddress]

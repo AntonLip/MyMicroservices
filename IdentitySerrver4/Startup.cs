@@ -1,5 +1,6 @@
 using IdentitySerrver4.Data;
 using IdentitySerrver4.Models;
+using IdentitySerrver4.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Services;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
 
@@ -26,16 +28,19 @@ namespace IdentitySerrver4
         {
             Environment = environment;
             Configuration = configuration;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
         public void ConfigureServices(IServiceCollection services)
         {
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
-            const string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4;trusted_connection=yes;";
-            var connectionStringUser = @"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
+            var connectionString = Configuration["ConnectionStrings:connectionStringIS4"];
+            //@"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4;trusted_connection=yes;";
+            var connectionStringUser = Configuration["ConnectionStrings:connectionStringUser"];
+            //@"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
 
-            services.AddDbContext<Data.AppDBContext>(options =>
+            services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(connectionStringUser)
              );
 
@@ -55,6 +60,7 @@ namespace IdentitySerrver4
                     policy.AllowCredentials();
                 });
             });
+            services.AddScoped<IProfileService, ProfileService>();
             //services.AddTransient<IEmailSender, EmailSender>();
             var cors = new DefaultCorsPolicyService(new LoggerFactory().CreateLogger<DefaultCorsPolicyService>())
             {
@@ -63,7 +69,7 @@ namespace IdentitySerrver4
             services.AddSingleton<ICorsPolicyService>(cors);
             var builer = services.AddIdentityServer(options =>
             {
-               // options.Discovery.CustomEntries.Add("admin_api", "~/Admin");
+                // options.Discovery.CustomEntries.Add("admin_api", "~/Admin");
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
@@ -71,7 +77,7 @@ namespace IdentitySerrver4
                 options.EmitStaticAudienceClaim = true;
             })
 
-                .AddInMemoryPersistedGrants()               
+                .AddInMemoryPersistedGrants()
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
@@ -142,11 +148,9 @@ namespace IdentitySerrver4
                         context.ApiScopes.Add(resource.ToEntity());
                     }
                     context.SaveChanges();
-
                 }
 
             }
         }
-
     }
 }
