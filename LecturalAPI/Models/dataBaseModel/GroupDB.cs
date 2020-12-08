@@ -26,6 +26,6 @@ namespace LecturalAPI.Models
 
         public List<TimetableDB> TimetableDB { get; set; }
 
-        public List<CadetDB> CadetDB { get; set; }
+        internal List<CadetDB> CadetDB { get; set; }
     }
 }

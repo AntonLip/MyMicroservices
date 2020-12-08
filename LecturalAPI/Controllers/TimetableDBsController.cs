@@ -23,6 +23,8 @@ namespace LecturalAPI.Controllers
             _timetableService = new TimetableService(context);
         }
 
+
+        #region GET
         // GET: api/TimetableDBs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetable()
@@ -68,7 +70,19 @@ namespace LecturalAPI.Controllers
 
             return timetableDB;
         }
+        [Route("forLectural")]
+        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayByLecturalAsync(DateTime dateTime, string lectural)
+        {
+            var timetableDB = await _timetableService.GetTimetableOnDayForLecturalAsync(lectural, dateTime);
 
+            if (timetableDB == null)
+            {
+                return NotFound();
+            }
+
+            return timetableDB;
+        }
+        #endregion
 
 
         // PUT: api/TimetableDBs/5
@@ -104,6 +118,9 @@ namespace LecturalAPI.Controllers
             else
                 return NoContent();
         }
+        // POST: api/TimetableDBs/changeLectural
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [Route("changeLectural")]
         public async Task<ActionResult<int>> PostLecturalInTimetable(string lecturalOlD, string lecturalNew)

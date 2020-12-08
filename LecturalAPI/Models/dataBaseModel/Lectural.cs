@@ -77,7 +77,7 @@ namespace LecturalAPI.Models
         public AcademicTitle AcademicTitle { get; set; }
         public AcademicDegree AcademicDegree { get; set; }
         public List<TimetableDB> TimetableDB { get; set; }
-
+        public Units Units { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LecturalAPI.Models;
+using LecturalAPI.Models.dataTransferModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,22 @@ namespace LecturalAPI.Services
             var dDB = await _context.Discipline.Where(c => c.id == id).FirstOrDefaultAsync();
             DisciplineDTOTimetable disciplineDTO = new DisciplineDTOTimetable(dDB);
             return disciplineDTO;
+        }
+
+        internal async Task<List<DisciplinesName>> GetDisciplineNames()
+        {
+            var disciplines = await _context.Discipline.ToListAsync();
+
+            if (disciplines != null)
+            {
+                List<DisciplinesName> disciplinesNames = new List<DisciplinesName>();
+                foreach (var d in disciplines)
+                {
+                    disciplinesNames.Add(new DisciplinesName(d));
+                }
+                return disciplinesNames;
+            }
+            return null;
         }
         #endregion
 

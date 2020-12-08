@@ -40,7 +40,6 @@ namespace LecturalAPI.Controllers
             {
                 return NotFound();
             }
-
             return cadetDB;
         }
 

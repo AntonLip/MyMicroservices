@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LecturalAPI.Models;
 using LecturalAPI.Models.dataBaseModel;
+using LecturalAPI.Models.dataTransferModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,23 @@ namespace LecturalAPI.Services
             return groupsDTO;
         }
 
+        public async Task<List<GroupsName>> GetAllGroupsNumbersAsync()
+        {
+
+            var grups = await _context.Group.ToListAsync();
+
+            if (grups != null)
+            {
+                List<GroupsName> groupsNumbers = new List<GroupsName>();
+                foreach (var g in grups)
+                {
+                    groupsNumbers.Add(new GroupsName(g));
+                }
+                return groupsNumbers;
+            }
+            return null;
+            
+        }
 
         public async Task<GroupDTO> GetGroupByIdAsync(Guid id)
         {

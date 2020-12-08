@@ -74,6 +74,19 @@ namespace LecturalAPI.Controllers
             }
             return BadRequest();
         }
+        // GET: api/Lecturals/Names
+        [Route("Names")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<LecturalName>>> GetLecturalNames()
+        {
+            var lecturalName = await _lecturalService.GetAllLecturalsNameAsync();
+            if (lecturalName == null)
+            {
+                return NotFound();
+            }
+
+            return lecturalName;
+        }
         #endregion
 
 

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LecturalAPI.Models;
 using LecturalAPI.Services;
 using LecturalAPI.Models.dataBaseModel;
+using LecturalAPI.Models.dataTransferModel;
 
 namespace LecturalAPI.Controllers
 {
@@ -29,6 +30,19 @@ namespace LecturalAPI.Controllers
         public async Task<ActionResult<IEnumerable<GroupDTO>>> GetGroupDB()
         {
             return await _groupSerice.GetAllGroupsAsync();           
+        }
+
+        // GET: api/GroupDBs/Numbers
+        [Route("Numbers")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GroupsName>>> GetGroupDBName()
+        {
+            var grName = await _groupSerice.GetAllGroupsNumbersAsync();
+            if (grName != null)
+            {
+                return grName;
+            }
+            return null;
         }
 
         //// GET: api/GroupDBs/5

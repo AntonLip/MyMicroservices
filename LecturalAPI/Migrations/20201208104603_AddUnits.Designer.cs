@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20201208104603_AddUnits")]
+    partial class AddUnits
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +32,9 @@ namespace LecturalAPI.Migrations
 
                     b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("Unitsid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("birthDay")
                         .HasColumnType("datetime2");
@@ -64,6 +69,8 @@ namespace LecturalAPI.Migrations
                     b.HasKey("id");
 
                     b.HasIndex("GroupDBid");
+
+                    b.HasIndex("Unitsid");
 
                     b.ToTable("Cadet");
                 });
@@ -597,6 +604,10 @@ namespace LecturalAPI.Migrations
                         .HasForeignKey("GroupDBid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("LecturalAPI.Models.dataBaseModel.Units", "Units")
+                        .WithMany("CadetDB")
+                        .HasForeignKey("Unitsid");
                 });
 
             modelBuilder.Entity("LecturalAPI.Models.DisciplineDB", b =>

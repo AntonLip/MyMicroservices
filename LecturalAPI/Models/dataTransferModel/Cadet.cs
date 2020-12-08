@@ -12,7 +12,7 @@ namespace LecturalAPI.Models
         {
         }
 
-        public Cadet(CadetDB cadetDB)
+        internal Cadet(CadetDB cadetDB)
         {
             id = cadetDB.id;
             groupName = cadetDB.GroupDB.SpecializationDB.nameOfSpecialization;
@@ -46,7 +46,7 @@ namespace LecturalAPI.Models
         public string info { get; set; }
 
 
-        public void CadetFromCadetDB(CadetDB cadetDB)
+        internal void CadetFromCadetDB(CadetDB cadetDB)
         {
             this.id = cadetDB.id;
             this.groupName = cadetDB.GroupDB.SpecializationDB.nameOfSpecialization;

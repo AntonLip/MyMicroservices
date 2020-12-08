@@ -27,5 +27,6 @@ namespace LecturalAPI.Models
         public DbSet<TimetableDB> Timetable { get; set; }
         internal DbSet<wifes> Wifes { get; set; }
         internal DbSet<children> Childrens { get; set; }
+        internal DbSet<Units> Units { get; set; }
     }
 }

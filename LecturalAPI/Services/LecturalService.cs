@@ -37,6 +37,21 @@ namespace LecturalAPI.Services
             }
             return lecturalDTO;
         }
+        public async Task<List<LecturalName>> GetAllLecturalsNameAsync()
+        {
+            int cnt = _context.Lectural.Local.Count();
+            var lectural = await _context.Lectural.ToListAsync();
+
+
+            List<LecturalName> lecturalDTO = new List<LecturalName>();
+            foreach (var g in lectural)
+            {
+
+                lecturalDTO.Add(new LecturalName(g));
+            }
+            return lecturalDTO;
+        }
+
         public async Task<List<LecturalMininfo>> GetAllLecturalMinInfoAsync(int Page = 0, int pageSizeCount = 5)
         {
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net.Http;
 using Microsoft.Web.Helpers;
 using System.IO;
+using LecturalAPI.Models.dataTransferModel;
 
 namespace LecturalAPI.Controllers
 {
@@ -60,6 +61,22 @@ namespace LecturalAPI.Controllers
             }
 
             return d;
+        }
+
+        // GET: api/DisciplineDBs/Names
+        [Route("Names")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<DisciplinesName>>> GetDisciplineDBNames()
+        {
+            var disciplines = await _disciplineService.GetDisciplineNames();
+            
+            if (disciplines != null)
+            {
+                
+                return disciplines;
+            }
+
+            return NotFound();
         }
 
         #endregion

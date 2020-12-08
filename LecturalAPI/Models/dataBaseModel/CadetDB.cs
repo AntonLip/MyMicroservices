@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LecturalAPI.Models.dataBaseModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LecturalAPI.Models
 {
-    public class CadetDB
+    internal class CadetDB
     {
         public CadetDB(GroupDB gr, Cadet cadet)
         {
@@ -31,6 +32,7 @@ namespace LecturalAPI.Models
         public Guid id { get; set; }
         public Guid GroupDBid { get; set; }
         public GroupDB GroupDB { get; set; }
+       
         public string lastName { get; set; }
         public string firstName { get; set; }
         public string middleName { get; set; }
@@ -42,5 +44,6 @@ namespace LecturalAPI.Models
         public bool isMarried { get; set; }
         public string militaryRank { get; set; }
         public string info { get; set; }
+
     }
 }

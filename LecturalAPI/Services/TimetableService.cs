@@ -18,6 +18,8 @@ namespace LecturalAPI.Services
             _context = context;
         }
 
+
+        #region  GET
         internal Task<ActionResult<IEnumerable<TTDTOOut>>> GetAllTimetableAsync()
         {
             throw new NotImplementedException();
@@ -35,7 +37,7 @@ namespace LecturalAPI.Services
                 return timetableOUT;
             }
 
-                return null;
+            return null;
 
         }
 
@@ -55,6 +57,44 @@ namespace LecturalAPI.Services
             }
             return null;
         }
+        
+        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayForGroupAsync(string group, DateTime dateTime)
+        {
+            var timetable = await _context.Timetable.Where(c => c.date == dateTime && c.numberOfGroup == group).ToListAsync();
+
+            List<TTDTOOut> timetableOUT = new List<TTDTOOut>();
+
+            if (timetable != null)
+            {
+                foreach (var t in timetable)
+                {
+                    timetableOUT.Add(new TTDTOOut(t));
+                }
+                return timetableOUT;
+            }
+            return null;
+        }
+
+        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayForLecturalAsync(string lectural, DateTime dateTime)
+        {
+            var timetable = await _context.Timetable.Where(c => c.date == dateTime && c.Lectural == lectural).ToListAsync();
+
+            List<TTDTOOut> timetableOUT = new List<TTDTOOut>();
+
+            if (timetable != null)
+            {
+                foreach (var t in timetable)
+                {
+                    timetableOUT.Add(new TTDTOOut(t));
+                }
+                return timetableOUT;
+            }
+            return null;
+        }
+        #endregion
+
+
+
 
         internal async Task<TTDTOOut> UpdateTimeTibleAsync(Guid id, TTDTOOut tTDTOOut)
         {
@@ -84,6 +124,8 @@ namespace LecturalAPI.Services
                 }
             }
         }
+
+        
 
         internal async Task<TTDTOOut> AddTimetableAsync(TTDTOOut tTDTOOut)
         {
@@ -178,22 +220,6 @@ namespace LecturalAPI.Services
 
         }
        
-        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayForGroupAsync(string group, DateTime dateTime)
-        {
-            var timetable = await _context.Timetable.Where(c => c.date == dateTime && c.numberOfGroup == group).ToListAsync();
-
-            List<TTDTOOut> timetableOUT = new List<TTDTOOut>();
-
-            if (timetable != null)
-            {
-                foreach (var t in timetable)
-                {
-                    timetableOUT.Add(new TTDTOOut(t));
-                }
-                return timetableOUT;
-            }
-            return null;
-        }
         
         private bool TimetableDBExists(Guid id)
         {
