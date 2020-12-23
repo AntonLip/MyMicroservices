@@ -27,7 +27,11 @@ namespace LecturalAPI
             IdentityModelEventSource.ShowPII = true;
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:3000")
+                builder.WithOrigins("http://localhost:3000",
+                                    "http://k41.Kafedra41.local",
+                                    "http://k41.Kafedra41.local:90",
+                                    "http://192.168.7.2:3000",
+                                    "http://192.168.7.2")
                        .AllowAnyHeader()
                        .AllowAnyMethod()
                        .AllowCredentials();
@@ -35,8 +39,8 @@ namespace LecturalAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddDbContextPool<AppdbContext>(opts =>
-                opts.UseSqlServer("server = (localDB)\\MSSQLLocalDB; database=WebDepartment; Trusted_Connection = true")
-            );
+                opts.UseSqlServer(Configuration["ConnectionStrings:connectionString"])
+            );//"server = (localDB)\\MSSQLLocalDB; database=WebDepartment; Trusted_Connection = true"
             services.AddHttpContextAccessor();
             services.AddAutoMapper(typeof(Startup));
 

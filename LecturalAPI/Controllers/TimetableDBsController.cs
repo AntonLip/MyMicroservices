@@ -45,7 +45,7 @@ namespace LecturalAPI.Controllers
 
             return timetableDB;
         }
-        //[Route("TimetableDay")]
+        
         [HttpGet("{dateTime:DateTime}")]
         public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDay(DateTime dateTime)
         {
@@ -81,6 +81,18 @@ namespace LecturalAPI.Controllers
             }
 
             return timetableDB;
+        }
+
+        [Route("GetFileteredTimetable")]
+        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate) 
+        {
+            var timetableDB = await _timetableService.GetTimetableFilteredData( lectural,  discipline,  group,  startDate,  stopDate);
+
+            if (timetableDB != null)
+            {
+                return timetableDB;
+            }
+            return NotFound();
         }
         #endregion
 

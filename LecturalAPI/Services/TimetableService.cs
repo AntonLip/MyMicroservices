@@ -91,10 +91,78 @@ namespace LecturalAPI.Services
             }
             return null;
         }
+               
+        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate)
+        {
+            List<string> filterParams = new List<string>();
+            filterParams.Add(lectural);
+            filterParams.Add(discipline);
+            filterParams.Add(group);
+
+            var timetable = new List<TimetableDB>();
+            int cnt = 0;
+            foreach (var p in filterParams)
+            {
+                if (p != "undefined")
+                {
+                    switch (cnt)
+                    {
+                        case 0:
+                            if (timetable.Count != 0)
+                            {
+                                timetable = timetable.Where(c => c.Lectural == p).ToList();
+                                break;
+                            }
+                            else
+                            {
+                                timetable = await _context.Timetable.Where(c => c.Lectural == p).ToListAsync();
+                                break;
+                            }
+                        case 1:
+                            if (timetable.Count != 0)
+                            {
+                                timetable = timetable.Where(c => c.nameOfDiscipline == p).ToList();
+                                break;
+                            }
+
+                            timetable = await _context.Timetable.Where(c => c.nameOfDiscipline == p).ToListAsync();
+                            break;
+                        case 2:
+                            if (timetable.Count != 0)
+                            {
+                                timetable = timetable.Where(c => c.numberOfGroup == p).ToList();
+                                break;
+                            }
+                            timetable = await _context.Timetable.Where(c => c.numberOfGroup == p).ToListAsync();
+                            break;
+
+                        default: break;
+
+                    }
+
+                }
+                cnt++;
+            }
+            if (timetable.Count != 0)
+            {
+                timetable = timetable.Where(c =>  c.date > startDate && c.date < stopDate).ToList();               
+            }
+            else
+            {
+                timetable = await _context.Timetable.Where(c => c.date > startDate && c.date < stopDate).ToListAsync();                
+            }
+            if (timetable == null)
+                return null;
+            var timetablelDTO = new List<TTDTOOut>();
+            foreach (var l in timetable)
+            {
+                timetablelDTO.Add(new TTDTOOut(l));
+            }
+
+            return timetablelDTO;
+        }
+
         #endregion
-
-
-
 
         internal async Task<TTDTOOut> UpdateTimeTibleAsync(Guid id, TTDTOOut tTDTOOut)
         {
@@ -124,9 +192,7 @@ namespace LecturalAPI.Services
                 }
             }
         }
-
         
-
         internal async Task<TTDTOOut> AddTimetableAsync(TTDTOOut tTDTOOut)
         {
             TimetableDB timetableDB = new TimetableDB(tTDTOOut);
@@ -196,14 +262,16 @@ namespace LecturalAPI.Services
                 if (Timetables != null)
                 {
                     return -1;
+                    //Add logger
+
                 }
                 else
                 {
-                    throw;
+                    return -2;
+                    //Add logger
                 }
             }
         }
-      
 
         internal async Task<TTDTOOut> DeleteTimetableAsync(Guid id)
         {
@@ -219,8 +287,7 @@ namespace LecturalAPI.Services
             return null;
 
         }
-       
-        
+
         private bool TimetableDBExists(Guid id)
         {
             return _context.Timetable.Any(e => e.id == id);

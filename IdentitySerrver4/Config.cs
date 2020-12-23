@@ -134,7 +134,7 @@ namespace IdentitySerrver4
                         {
                             new Secret("secret".Sha256())
                         },
-                    AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
                     RedirectUris = { "http://localhost:3000/signin-oidc"},
                     PostLogoutRedirectUris = { "http://localhost:3000/signout-callback-oidc" },

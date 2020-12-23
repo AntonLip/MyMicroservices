@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace LecturalAPI.Controllers
 {
     [Route("api/[controller]")]
-    //[ApiController]
+    [ApiController]
     //[Authorize]
     public class LecturalsController : ControllerBase
     {

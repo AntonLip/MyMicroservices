@@ -32,11 +32,11 @@ namespace LecturalAPI.Services
             List<LecturalDTO> lecturalDTO = new List<LecturalDTO>();
             foreach (var g in lectural)
             {
-
                 lecturalDTO.Add(new LecturalDTO(g));
             }
             return lecturalDTO;
         }
+        
         public async Task<List<LecturalName>> GetAllLecturalsNameAsync()
         {
             int cnt = _context.Lectural.Local.Count();
@@ -122,51 +122,65 @@ namespace LecturalAPI.Services
                         case 1:
                             if (lecturals.Count != 0)
                             {
-                                lecturals = lecturals.Where(c => c.middleName == p).ToList(); break;
+                                lecturals = lecturals.Where(c => c.middleName == p).ToList(); 
+                                break;
                             }
 
-                            lecturals = await _context.Lectural.Where(c => c.middleName == p).ToListAsync(); break;
+                            lecturals = await _context.Lectural.Where(c => c.middleName == p).ToListAsync();
+                            break;
                         case 2:
                             if (lecturals.Count != 0)
                             {
-                                lecturals = lecturals.Where(c => c.lastName == p).ToList(); break;
+                                lecturals = lecturals.Where(c => c.lastName == p).ToList();
+                                break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.lastName == p).ToListAsync(); break;
+                            lecturals = await _context.Lectural.Where(c => c.lastName == p).ToListAsync();
+                            break;
 
                         case 3:
                             if (lecturals.Count != 0)
                             {
-                                lecturals = lecturals.Where(c => c.MilitaryRank.name == p).ToList(); break;
+                                lecturals = lecturals.Where(c => c.MilitaryRank.name == p).ToList();
+                                break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.MilitaryRank.name == p).ToListAsync(); break;
+                            lecturals = await _context.Lectural.Where(c => c.MilitaryRank.name == p).ToListAsync();
+                            break;
 
                         case 4:
                             if (lecturals.Count != 0)
                             {
-                                lecturals = lecturals.Where(c => c.Position.name == p).ToList(); break;
+                                lecturals = lecturals.Where(c => c.Position.name == p).ToList();
+                                break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.Position.name == p).ToListAsync(); break;
+                            lecturals = await _context.Lectural.Where(c => c.Position.name == p).ToListAsync();
+                            break;
 
                         case 5:
                             if (lecturals.Count != 0)
                             {
-                                lecturals = lecturals.Where(c => c.AcademicTitle.name == p).ToList(); break;
+                                lecturals = lecturals.Where(c => c.AcademicTitle.name == p).ToList();
+                                break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.AcademicTitle.name == p).ToListAsync(); break;
+                            lecturals = await _context.Lectural.Where(c => c.AcademicTitle.name == p).ToListAsync();
+                            break;
 
                         case 6:
                             if (lecturals.Count != 0)
                             {
-                                lecturals = lecturals.Where(c => c.AcademicDegree.name == p).ToList(); break;
+                                lecturals = lecturals.Where(c => c.AcademicDegree.name == p).ToList();
+                                break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.AcademicDegree.name == p).ToListAsync(); break;
+                            lecturals = await _context.Lectural.Where(c => c.AcademicDegree.name == p).ToListAsync();
+                            break;
 
                         case 7:
                             if (lecturals.Count != 0)
                             {
-                                lecturals = lecturals.Where(c => c.FormSec == Int32.Parse(p)).ToList(); break;
+                                lecturals = lecturals.Where(c => c.FormSec == Int32.Parse(p)).ToList();
+                                break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.FormSec == Int32.Parse(p)).ToListAsync(); break;
+                            lecturals = await _context.Lectural.Where(c => c.FormSec == Int32.Parse(p)).ToListAsync();
+                            break;
 
                         default: break;
 
@@ -329,7 +343,6 @@ namespace LecturalAPI.Services
 
         }
 
-
         public async Task<LecturalDTO> AddLecturalAsync(LecturalDTO lecturalDTO)
         {
             MilitaryRank militaryRank = await _context.MilitaryRank.Where(c => c.name == lecturalDTO.MilitaryRank).FirstOrDefaultAsync();
@@ -359,7 +372,6 @@ namespace LecturalAPI.Services
                 }
             }
         }
-
 
     }
 }
