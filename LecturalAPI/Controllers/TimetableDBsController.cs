@@ -16,13 +16,12 @@ namespace LecturalAPI.Controllers
     [ApiController]
     public class TimetableDBsController : ControllerBase
     {
-        
+
         private readonly TimetableService _timetableService;
         public TimetableDBsController(AppdbContext context)
         {
             _timetableService = new TimetableService(context);
         }
-
 
         #region GET
         // GET: api/TimetableDBs
@@ -45,7 +44,7 @@ namespace LecturalAPI.Controllers
 
             return timetableDB;
         }
-        
+
         [HttpGet("{dateTime:DateTime}")]
         public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDay(DateTime dateTime)
         {
@@ -58,6 +57,7 @@ namespace LecturalAPI.Controllers
 
             return timetableDB;
         }
+
         [Route("forGroup")]
         public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayByGroupAsync(DateTime dateTime, string groupDTO)
         {
@@ -70,6 +70,7 @@ namespace LecturalAPI.Controllers
 
             return timetableDB;
         }
+
         [Route("forLectural")]
         public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayByLecturalAsync(DateTime dateTime, string lectural)
         {
@@ -84,9 +85,9 @@ namespace LecturalAPI.Controllers
         }
 
         [Route("GetFileteredTimetable")]
-        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate) 
+        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate)
         {
-            var timetableDB = await _timetableService.GetTimetableFilteredData( lectural,  discipline,  group,  startDate,  stopDate);
+            var timetableDB = await _timetableService.GetTimetableFilteredData(lectural, discipline, group, startDate, stopDate);
 
             if (timetableDB != null)
             {
@@ -96,7 +97,30 @@ namespace LecturalAPI.Controllers
         }
         #endregion
 
+        #region POST
 
+        // POST: api/TimetableDBs
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost]
+        public async Task<ActionResult<TTDTOOut>> PostTimetableDB(TTDTOOut tTDTOOut)
+        {
+
+            var t = await _timetableService.AddTimetableAsync(tTDTOOut);
+            if (t != null)
+                return CreatedAtAction("GetTimetableDB", new { id = t.id }, t);
+            else
+                return NoContent();
+        }
+
+        // POST: api/TimetableDBs/changeLectural
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+
+
+        #endregion
+
+        #region PUT
         // PUT: api/TimetableDBs/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -117,49 +141,121 @@ namespace LecturalAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/TimetableDBs
+        // PUT: api/TimetableDBs/?disciplines=NameOfdisciplines&lecturalOlD=nameOfLectural&lecturalNew=nameOflectural
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<TTDTOOut>> PostTimetableDB(TTDTOOut tTDTOOut)
+        [HttpPut]
+        public async Task<ActionResult<int>> PutChangeLecturalInTDiscipline(Guid idDisciplines, string lecturalNew, bool isFullDiscipline, DateTime start, DateTime dateTime)
         {
-            
-           var t = await _timetableService.AddTimetableAsync(tTDTOOut);
-            if(t != null)
-                return CreatedAtAction("GetTimetableDB", new { id = t.id }, t);
-            else
-                return NoContent();
-        }
-        // POST: api/TimetableDBs/changeLectural
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        [Route("changeLectural")]
-        public async Task<ActionResult<int>> PostLecturalInTimetable(string lecturalOlD, string lecturalNew)
-        {
-            //Response
-            var result = await _timetableService.ChangeLecturalInTimetable(lecturalOlD , lecturalNew );
-            if (result == -1) 
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                var result = await _timetableService.ChangeLecturalInTDiscipline(idDisciplines, lecturalNew, isFullDiscipline, start, dateTime);
+                if (result == -1)
+                {
+                    return NotFound();
+                }
+                else if (result == -2)
+                {
+                    return Problem("Didn't all updates is ok");
+                }
+                else if (result == -10)
+                {
+                    return Problem("Exeption");
+                }
+                else
+                {
+                    return result;
+
+                }
             }
-            return result;
+            //Response
+            return NotFound();
         }
+
+
+        //PUT: api/TimetableDBs/LessonDate/?id=DA9C95EC-57BD-435C-75A3-08D8A8B7F40D&newDate=2020-09-03 00:00:00.0000000&newNumberOflesson=2
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Route("LessonDate")]
+        [HttpPut]
+        public async Task<ActionResult<int>> PutChangeDateOfLesson(Guid id, DateTime newDate,  int newNumberOflesson)
+        {
+            if (ModelState.IsValid)
+            {
+                var res = await _timetableService.ChangeDateOfLesson(id, newDate, newNumberOflesson);
+                if (res != null)
+                {
+                    CreatedAtAction("GetTimetableDB", new { id = res.id }, res);
+                }
+                else 
+                {
+                    return NotFound();
+                }
+            }
+            return BadRequest();
+        }
+        //PUT: api/TimetableDBs/Comment/?id=DA9C95EC-57BD-435C-75A3-08D8A8B7F40D&newDate=2020-09-03 00:00:00.0000000&newNumberOflesson=2
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Route("Comment")]
+        [HttpPut]
+        public async Task<ActionResult<int>> PutChangeCommentOfLesson(Guid id, string forWho, string info)
+        {
+            if (ModelState.IsValid)
+            {
+                var res = await _timetableService.ChangeCommentOfLesson(id, forWho, info);
+                if (res != null)
+                {
+                   return CreatedAtAction("GetTimetableDB", new { id = res.id }, res);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [Route("SetAud")]
+        [HttpPut]
+        public async Task<ActionResult<TTDTOOut>> PutSetAuditoreInLesson(Guid id, string aud)
+        {
+            if (ModelState.IsValid)
+            {
+                var res = await _timetableService.SetAuditoreInLesson(id, aud);
+                if (res != null)
+                {
+                    return CreatedAtAction("GetTimetableDB", new { id = res.id }, res);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        #endregion
 
         // DELETE: api/TimetableDBs/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<TTDTOOut>> DeleteTimetableDB(Guid id)
         {
             var t = await _timetableService.DeleteTimetableAsync(id);
-           
+
             if (t == null)
             {
                 return NotFound();
-            }           
+            }
 
             return t;
         }
 
-       
+
     }
 }

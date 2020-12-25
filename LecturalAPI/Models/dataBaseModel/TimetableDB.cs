@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LecturalAPI.Models.dataBaseModel
 {
-    public class TimetableDB
+    public class TimetableDB:IDisposable
     {
         public TimetableDB()
         {
@@ -26,6 +26,13 @@ namespace LecturalAPI.Models.dataBaseModel
             numberOfLessonInDay = tTDTOOut.numberOfLessonInDay;
 
         }
+
+        ~TimetableDB() 
+        {
+            Dispose(false);
+        }
+        
+        private bool _disposed = false;
 
         [Key]
         public Guid id { get; set; }
@@ -54,5 +61,20 @@ namespace LecturalAPI.Models.dataBaseModel
 
         public GroupDB GroupDB { get; set; }
         public DisciplineDB DisciplineDB { get; set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this); 
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+            }
+            // free native resources if there are any.
+            _disposed = true;
+        }
     }
 }
