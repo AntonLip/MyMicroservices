@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GetFiles.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,18 +20,18 @@ namespace IdentitySerrver4.Quickstart
         public IFormFile _Picture { get; set; }
         public List<Claim> Claims { get; set; }
 
-        public ClaimStore(string family_name, string Gender, string Adress, string given_name , string middle_name /*IFormFile picture*/)
+        public ClaimStore(string family_name, string Gender, string Adress, string given_name , string middle_name, IFormFile picture)
         {
             _given_name = given_name;
             _Position = Gender;
             _middle_name = middle_name;
             _family_name = family_name;
             _Adress = Adress;
-            //_Picture = picture;
+            _Picture = picture;
             Claims = new List<Claim>();
         }
 
-        public void SetClaims()
+        public async Task SetClaimsAsync()
         {
             if (_given_name != null)
             {
@@ -38,7 +40,19 @@ namespace IdentitySerrver4.Quickstart
                 Claims.Add(new Claim("Adress", _Adress));
                 Claims.Add(new Claim("given_name", _given_name));
                 Claims.Add(new Claim("middle_name", _middle_name));
-                //Claims.Add(new Claim("picture", _Picture.ContentDisposition));
+                if (_Picture != null)
+                {
+                    var path = Path.Combine(
+                             Directory.GetCurrentDirectory(), "photos",
+                             _Picture.GetFilename());
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await _Picture.CopyToAsync(stream);
+                    }
+                    Claims.Add(new Claim("picture", _Picture.GetFilename()));
+                }
+                
             }
            
         }    
@@ -48,7 +62,8 @@ namespace IdentitySerrver4.Quickstart
             new Claim("position", " "),
             new Claim("Adress", " "),
             new Claim("given_name"," "),
-            new Claim("middle_name"," ")
+            new Claim("middle_name"," "),
+            new Claim("picture"," ")
         };
 
         public IEnumerator GetEnumerator()

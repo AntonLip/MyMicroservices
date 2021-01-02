@@ -6,7 +6,7 @@
 <h1>REGISTRATION</h1>
 <div class="row">
     <div class="col-md-12">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data"  asp-action="Register">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName"></label>
@@ -56,6 +56,11 @@
                 <label asp-for="phoneNumber"></label>
                 <input asp-for="phoneNumber" class="form-control" />
                 <span asp-validation-for="phoneNumber" class="text-dark"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Avatar">Аватар</label>
+                <input asp-for="Avatar" type="file"  value="Upload" class="form-control" />
+                <span asp-validation-for="Avatar" class="text-dark"></span>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>

@@ -264,20 +264,19 @@ namespace IdentityServerHost.Quickstart.UI
                     Gender = registerViweModel.position,
                     MiddleName = registerViweModel.middle_name,
                     FamilyName = registerViweModel.family_name,
-                    address =registerViweModel.addres,
-                    
-
+                    address =registerViweModel.addres
                 };
                 ClaimStore claimStore = new ClaimStore(registerViweModel.family_name,
                                                         registerViweModel.position,
                                                         registerViweModel.addres,
                                                          registerViweModel.given_name,
-                                                         registerViweModel.middle_name);
-                claimStore.SetClaims();
+                                                         registerViweModel.middle_name,
+                                                         registerViweModel.Avatar);
+               await claimStore.SetClaimsAsync();
                 var result = _userManager.CreateAsync(user, registerViweModel.Password);
                 if (result.Result.Succeeded)
                 {
-                    foreach ( var c in claimStore) 
+                    foreach ( var c in claimStore.Claims) 
                     {
                         var res = _userManager.AddClaimAsync(user, (Claim)c);
                     }

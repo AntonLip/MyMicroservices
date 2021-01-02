@@ -44,7 +44,7 @@ namespace IdentityServerHost.Quickstart.UI
         [Phone]
         public string phoneNumber { get; set; }
 
-
+        public IFormFile Avatar { get; set; }
 
 
     }
