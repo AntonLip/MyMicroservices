@@ -30,6 +30,20 @@ namespace LecturalAPI.Controllers
             return  await _cadetServies.GetAllCadetsAsync();            
         }
 
+        // GET: api/Cadets/FilteredCadet
+        [HttpGet]
+        [Route("FilteredCadet")]
+        public async Task<ActionResult<IEnumerable<Cadet>>> GetFilteredCadet(string militaryRank, string Position, string groupNumber)
+        {
+            var cadets = await _cadetServies.GetFilteredCadetsAsync(militaryRank, Position, groupNumber);
+
+            if (cadets != null)
+            {
+                return cadets;
+            }
+            return NotFound();
+        }
+
         // GET: api/Cadets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cadet>> GetCadetDB(Guid id)

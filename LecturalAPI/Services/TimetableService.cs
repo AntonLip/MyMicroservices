@@ -95,7 +95,7 @@ namespace LecturalAPI.Services
             filterParams.Add(lectural);
             filterParams.Add(discipline);
             filterParams.Add(group);
-
+            var MyBD = new DateTime(1991, 10, 11);
             var timetable = new List<TimetableDB>();
             int cnt = 0;
             foreach (var p in filterParams)
@@ -142,11 +142,29 @@ namespace LecturalAPI.Services
             }
             if (timetable.Count != 0)
             {
-                timetable = timetable.Where(c => c.date > startDate && c.date < stopDate).ToList();
+                if (startDate != MyBD)
+                {
+                    timetable = timetable.Where(c => c.date > startDate).ToList();
+                }
+                if (stopDate != MyBD)
+                {
+                    timetable = timetable.Where(c => c.date < stopDate).ToList();
+                }
             }
             else
             {
-                timetable = await _context.Timetable.Where(c => c.date > startDate && c.date < stopDate).ToListAsync();
+                if (startDate != MyBD && stopDate != MyBD)
+                {
+                    timetable = await _context.Timetable.Where(c => c.date > startDate && c.date < stopDate).ToListAsync();
+                }
+                else if (startDate != MyBD)
+                {
+                    timetable = await _context.Timetable.Where(c => c.date > startDate).ToListAsync();
+                }
+                else if (stopDate != MyBD)
+                {
+                    timetable = await _context.Timetable.Where(c => c.date < stopDate).ToListAsync();
+                }
             }
             if (timetable == null)
                 return null;
@@ -193,8 +211,8 @@ namespace LecturalAPI.Services
                 }
             }
         }
-        
-        internal async Task<int> ChangeLecturalInTDiscipline(Guid idDisciplines, string lecturalNew, bool isFullDiscipline, DateTime start, DateTime stop )
+
+        internal async Task<int> ChangeLecturalInTDiscipline(Guid idDisciplines, string lecturalNew, bool isFullDiscipline, DateTime start, DateTime stop)
         {
             int counterOfChanges = 0;
             List<TimetableDB> timetable = new List<TimetableDB>();
@@ -208,7 +226,7 @@ namespace LecturalAPI.Services
                 {
                     return -10;
                 }
-                
+
             }
             else
             {
@@ -220,7 +238,7 @@ namespace LecturalAPI.Services
                 {
                     return -10;
                 }
-                
+
             }
 
 
@@ -293,7 +311,7 @@ namespace LecturalAPI.Services
                 }
 
             }
-            else 
+            else
             {
                 return null;
             }
@@ -443,7 +461,7 @@ namespace LecturalAPI.Services
                 }
             }
         }
-                
+
         internal async Task<TTDTOOut> DeleteTimetableAsync(Guid id)
         {
             var timetableDB = await _context.Timetable.FindAsync(id);

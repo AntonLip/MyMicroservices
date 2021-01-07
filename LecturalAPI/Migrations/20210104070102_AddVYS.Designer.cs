@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20210104070102_AddVYS")]
+    partial class AddVYS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,6 +151,9 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("CountCadets")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("ProfessionDBid")
                         .HasColumnType("uniqueidentifier");
 
@@ -200,6 +205,9 @@ namespace LecturalAPI.Migrations
                     b.Property<DateTime>("birthDay")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("countOfChildren")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("dateOfExpiry")
                         .HasColumnType("datetime2");
 
@@ -214,9 +222,6 @@ namespace LecturalAPI.Migrations
 
                     b.Property<string>("info")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isLectural")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("isMarried")
                         .HasColumnType("bit");
@@ -240,9 +245,6 @@ namespace LecturalAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("serialAndNumderMilitaryDocs")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("telephoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("whoGetPassport")
@@ -525,36 +527,7 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("birthDay")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("firstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("info")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("lastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("middleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("pathPhotoBig")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("pathPhotoSmall")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Childrens");
-                });
-
-            modelBuilder.Entity("LecturalAPI.Models.dataBaseModel.wifes", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid?>("Lecturalid")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("birthDay")
@@ -579,6 +552,45 @@ namespace LecturalAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
+
+                    b.HasIndex("Lecturalid");
+
+                    b.ToTable("Childrens");
+                });
+
+            modelBuilder.Entity("LecturalAPI.Models.dataBaseModel.wifes", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("Lecturalid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("birthDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("firstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("info")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("lastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("middleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("pathPhotoBig")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("pathPhotoSmall")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("Lecturalid");
 
                     b.ToTable("Wifes");
                 });
@@ -673,6 +685,20 @@ namespace LecturalAPI.Migrations
                     b.HasOne("LecturalAPI.Models.dataBaseModel.LessonDB", "LessonDB")
                         .WithMany("TimetableDB")
                         .HasForeignKey("LessonDBid");
+                });
+
+            modelBuilder.Entity("LecturalAPI.Models.dataBaseModel.children", b =>
+                {
+                    b.HasOne("LecturalAPI.Models.Lectural", null)
+                        .WithMany("childrens")
+                        .HasForeignKey("Lecturalid");
+                });
+
+            modelBuilder.Entity("LecturalAPI.Models.dataBaseModel.wifes", b =>
+                {
+                    b.HasOne("LecturalAPI.Models.Lectural", null)
+                        .WithMany("wife")
+                        .HasForeignKey("Lecturalid");
                 });
 #pragma warning restore 612, 618
         }

@@ -56,15 +56,14 @@ namespace LecturalAPI.Controllers
 
         [Route("filtered")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalFiltered(string firstName, string middleName, string lastName,
+        public async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetLecturalFiltered(
                                                                               string militaryRank, string position, string academicTitle,
-                                                                              string academicDegree, string formSec)
+                                                                              string academicDegree, string formSec, string unit)
         {
             if (ModelState.IsValid)
             {
-                var lectural = await _lecturalService.GetAllLecturalFilterdAsync(firstName, middleName, lastName,
-                                                                         militaryRank, position, academicTitle,
-                                                                         academicDegree, formSec);
+                var lectural = await _lecturalService.GetAllLecturalFilterdAsync(militaryRank, position, academicTitle,
+                                                                         academicDegree, formSec, unit);
                 if (lectural == null)
                 {
                     return NotFound();

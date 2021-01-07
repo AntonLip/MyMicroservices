@@ -12,7 +12,6 @@ namespace LecturalAPI.Models
         public string ProfessionLastName { get; set; }
         public string nameOfSpecialization { get; set; }
         public string numberOfGroup { get; set; }
-        public int CountCadets { get; set; }
         public string info { get; set; }
 
         public void GroupDBtoGroupDTO(GroupDB groupDB) 
@@ -20,7 +19,6 @@ namespace LecturalAPI.Models
             this.id = groupDB.id;
             this.nameOfSpecialization = groupDB.SpecializationDB.SpecializationCode;
             this.ProfessionLastName = groupDB.ProfessionDB.nameOfProffession;
-            this.CountCadets = groupDB.CountCadets;
             this.numberOfGroup = groupDB.numberOfGroup;
             this.info = groupDB.info;
         }

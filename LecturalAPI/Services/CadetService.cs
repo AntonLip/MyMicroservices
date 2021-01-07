@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LecturalAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,67 @@ namespace LecturalAPI.Services
             Cadet cadetDTO = new Cadet(grups);
 
             return cadetDTO;
+        }
+
+        internal async Task<ActionResult<IEnumerable<Cadet>>> GetFilteredCadetsAsync(string militaryRank, string position, string groupNumber)
+        {
+            List<string> lists = new List<string>();
+            lists.Add(militaryRank);
+            lists.Add(position);
+            lists.Add(groupNumber);
+            List<CadetDB> Cadets = new List<CadetDB>();
+            int cnt = 0;
+            foreach (var p in lists)
+            {
+                if (p != "undefined")
+                {
+                    switch (cnt)
+                    {
+                        case 0:
+                            if (Cadets.Count != 0)
+                            {
+                                Cadets = Cadets.Where(c => c.militaryRank == p).ToList();
+                                break;
+                            }
+                            else
+                            {
+                                Cadets = await _context.Cadet.Where(c => c.militaryRank == p).Include(c => c.GroupDB).ToListAsync();
+                                break;
+                            }
+                        case 1:
+                            if (Cadets.Count != 0)
+                            {
+                                Cadets = Cadets.Where(c => c.Position == p).ToList();
+                                break;
+                            }
+                            else
+                                Cadets = await _context.Cadet.Where(c => c.Position == p).Include(c => c.GroupDB).ToListAsync();
+                            break;
+                        case 2:
+                            if (Cadets.Count != 0)
+                            {
+                                Cadets = Cadets.Where(c => c.GroupDB.numberOfGroup == p).ToList();
+                                break;
+                            }
+                            else
+                                Cadets = await _context.Cadet.Where(c => c.GroupDB.numberOfGroup == p).Include(c => c.GroupDB).ToListAsync();
+                            break;
+
+                        default: break;
+                    }
+                }
+                cnt++;
+
+            }
+            if (Cadets == null)
+                return null;
+            List<Cadet> CadetsDTO = new List<Cadet>();
+            foreach (var c in Cadets)
+            {
+                CadetsDTO.Add(new Cadet(c));
+            }
+
+            return CadetsDTO;
         }
 
         internal async Task<Cadet> UpdateCadetAsync(Guid id, Cadet cadetDTO)

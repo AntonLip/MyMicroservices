@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20210104084541_DelSomeFieldInLectural")]
+    partial class DelSomeFieldInLectural
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,6 +151,9 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("CountCadets")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("ProfessionDBid")
                         .HasColumnType("uniqueidentifier");
 
@@ -215,9 +220,6 @@ namespace LecturalAPI.Migrations
                     b.Property<string>("info")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isLectural")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("isMarried")
                         .HasColumnType("bit");
 
@@ -240,9 +242,6 @@ namespace LecturalAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("serialAndNumderMilitaryDocs")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("telephoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("whoGetPassport")

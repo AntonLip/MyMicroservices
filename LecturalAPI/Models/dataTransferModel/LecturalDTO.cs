@@ -25,7 +25,6 @@ namespace LecturalAPI.Models.dataTransferModel
             serialAndNumderCivilyDocs = lecturalDB.serialAndNumderCivilyDocs;
             dateOfStartService = lecturalDB.dateOfStartService;
             isMarried = lecturalDB.isMarried;
-            countOfChildren = lecturalDB.countOfChildren;
             info = lecturalDB.info;
             dateOfIssue = lecturalDB.dateOfIssue;
             dateOfExpiry = lecturalDB.dateOfExpiry;
@@ -33,6 +32,7 @@ namespace LecturalAPI.Models.dataTransferModel
             nameOFVoinkom = lecturalDB.nameOFVoinkom;
             FormSec = lecturalDB.FormSec;
             DateFormSec = lecturalDB.DateFormSec;
+            Unit = lecturalDB.Units.name;
             if (lecturalDB.MilitaryRank == null)
             {
                 MilitaryRank = "none";
@@ -101,14 +101,7 @@ namespace LecturalAPI.Models.dataTransferModel
         public string serialAndNumderMilitaryDocs { get; set; }
         public int FormSec { get; set; }
         public DateTime DateFormSec { get; set; }
-
-       
-
-
-
-
-
-
+        public string Unit { get;  set; }
     }
 
     public class LecturalMininfo 
@@ -141,6 +134,14 @@ namespace LecturalAPI.Models.dataTransferModel
             {
                 Position = lecturalDB.Position.name;
             }
+            if (lecturalDB.Units == null)
+            {
+                unit = "undefined";
+            }
+            else
+            {
+                unit = lecturalDB.Units.name;
+            }
         }
 
         public Guid id { get; set; }
@@ -151,6 +152,7 @@ namespace LecturalAPI.Models.dataTransferModel
         public string pathPhotoBig { get; set; }
         public string MilitaryRank { get; set; }
         public string Position { get; set; }
+        public string unit { get; set; }
     }
 }
 

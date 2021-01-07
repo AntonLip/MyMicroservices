@@ -7,7 +7,7 @@ namespace LecturalAPI.Models
 {
     internal class Lectural
     {
-        public Lectural(LecturalDTO lecturalDTO, MilitaryRank militaryRank, Position position, AcademicDegree academicDegree, AcademicTitle academicTitle)
+        public Lectural(LecturalDTO lecturalDTO, MilitaryRank militaryRank, Position position, AcademicDegree academicDegree, AcademicTitle academicTitle, Units units)
         {
             id = lecturalDTO.id;
             lastName = lecturalDTO.lastName;
@@ -20,7 +20,6 @@ namespace LecturalAPI.Models
             serialAndNumderCivilyDocs = lecturalDTO.serialAndNumderCivilyDocs;
             dateOfStartService = lecturalDTO.dateOfStartService;
             isMarried = lecturalDTO.isMarried;
-            countOfChildren = lecturalDTO.countOfChildren;
             info = lecturalDTO.info;
             MilitaryRank = militaryRank;
             Position = position;
@@ -32,6 +31,7 @@ namespace LecturalAPI.Models
             DateFormSec = lecturalDTO.DateFormSec;
             dateOfExpiry = lecturalDTO.dateOfExpiry;
             dateOfIssue = lecturalDTO.dateOfIssue;
+            Units = units;
         }
 
         public Guid id { get; set; }
@@ -48,10 +48,8 @@ namespace LecturalAPI.Models
         public string pathPhotoSmall { get; set; }
         public string pathPhotoBig { get; set; }
         public bool isMarried { get; set; }
-        public List<wifes> wife { get; set; }
-        public List<children> childrens { get; set; }
         public DateTime dateOfStartService { get; set; }
-        public int countOfChildren { get; set; }
+        
         #endregion
 
         #region CivilDocs
@@ -69,6 +67,11 @@ namespace LecturalAPI.Models
         #endregion
 
         public string info { get; set; }
+
+        public string telephoneNumber { get; set; }
+
+        public bool isLectural { get; set; }
+
 
         public List<LessonDB> LessonDBs { get; set; }
         public List<DisciplineDB> DisciplineDB { get; set; }

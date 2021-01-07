@@ -21,7 +21,6 @@ namespace LecturalAPI.Models
 
         public Guid SpecializationDBid { get; set; }
         public string numberOfGroup { get; set; }
-        public int CountCadets { get; set; }
         public string info { get; set; }
 
         public List<TimetableDB> TimetableDB { get; set; }

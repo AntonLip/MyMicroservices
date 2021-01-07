@@ -9,6 +9,7 @@ namespace LecturalAPI.Models.dataBaseModel
     {
         public Guid id { get; set; }
         public string name { get; set; }
+        public string VYC { get; set; }
         public float koeff { get; set; }
     }
 

@@ -37,7 +37,8 @@ namespace LecturalAPI.Models.dataBaseModel
         public int currentNumberOflessonsType { get; set; }
 
         public string pathToMaterials { get; set; }
-
+        //Link to videos
+        //Link to literature
         public LessonTypeDB LessonTypeDB { get; set; }
         internal Lectural Lectural { get; set; }
         public DisciplineDB Discipline { get; set; }

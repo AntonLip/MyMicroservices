@@ -57,6 +57,7 @@ namespace LecturalAPI.Services
 
             var lectural = await _context.Lectural.Include(c => c.Position)
                                                   .Include(c => c.MilitaryRank)
+                                                  .Include(c => c.Units)
                                                   .Skip(Page * pageSizeCount).Take(pageSizeCount)
                                                   .ToListAsync();
 
@@ -87,19 +88,16 @@ namespace LecturalAPI.Services
             return null;
         }
 
-        internal async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetAllLecturalFilterdAsync(string firstName, string middleName, string lastName,
-                                                                                                   string militaryRank, string position, string academicTitle,
-                                                                                                   string academicDegree, string formSec)
+        internal async Task<ActionResult<IEnumerable<LecturalMininfo>>> GetAllLecturalFilterdAsync(string militaryRank, string position, string academicTitle,
+                                                                                                   string academicDegree, string formSec, string unit)
         {
             List<string> lists = new List<string>();
-            lists.Add(firstName);
-            lists.Add(middleName);
-            lists.Add(lastName);
             lists.Add(militaryRank);
             lists.Add(position);
             lists.Add(academicTitle);
             lists.Add(academicDegree);
             lists.Add(formSec);
+            lists.Add(unit);
             List<Lectural> lecturals = new List<Lectural>();
             int cnt = 0;
             foreach (var p in lists)
@@ -107,79 +105,82 @@ namespace LecturalAPI.Services
                 if (p != "undefined")
                 {
                     switch (cnt)
-                    {
+                    {                       
                         case 0:
-                            if (lecturals.Count != 0)
-                            {
-                                lecturals = lecturals.Where(c => c.firstName == p).ToList();
-                                break;
-                            }
-                            else
-                            {
-                                lecturals = await _context.Lectural.Where(c => c.firstName == p).ToListAsync();
-                                break;
-                            }
-                        case 1:
-                            if (lecturals.Count != 0)
-                            {
-                                lecturals = lecturals.Where(c => c.middleName == p).ToList(); 
-                                break;
-                            }
-
-                            lecturals = await _context.Lectural.Where(c => c.middleName == p).ToListAsync();
-                            break;
-                        case 2:
-                            if (lecturals.Count != 0)
-                            {
-                                lecturals = lecturals.Where(c => c.lastName == p).ToList();
-                                break;
-                            }
-                            lecturals = await _context.Lectural.Where(c => c.lastName == p).ToListAsync();
-                            break;
-
-                        case 3:
                             if (lecturals.Count != 0)
                             {
                                 lecturals = lecturals.Where(c => c.MilitaryRank.name == p).ToList();
                                 break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.MilitaryRank.name == p).ToListAsync();
+                            else
+                                lecturals = await _context.Lectural.Where(c => c.MilitaryRank.name == p)
+                                                                                                .Include(c => c.MilitaryRank)
+                                                                                                .Include(c => c.Position)
+                                                                                                .ToListAsync();
                             break;
 
-                        case 4:
+                        case 1:
                             if (lecturals.Count != 0)
                             {
                                 lecturals = lecturals.Where(c => c.Position.name == p).ToList();
                                 break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.Position.name == p).ToListAsync();
+                            else
+                                lecturals = await _context.Lectural.Where(c => c.Position.name == p).Include(c => c.Units)
+                                                                                                .Include(c => c.MilitaryRank)
+                                                                                                .Include(c => c.Position)
+                                                                                                .ToListAsync();
                             break;
 
-                        case 5:
+                        case 2:
                             if (lecturals.Count != 0)
                             {
                                 lecturals = lecturals.Where(c => c.AcademicTitle.name == p).ToList();
                                 break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.AcademicTitle.name == p).ToListAsync();
+                            else
+                                lecturals = await _context.Lectural.Where(c => c.AcademicTitle.name == p).Include(c => c.Units)
+                                                                                                .Include(c => c.MilitaryRank)
+                                                                                                .Include(c => c.Position)
+                                                                                                .ToListAsync();
                             break;
 
-                        case 6:
+                        case 3:
                             if (lecturals.Count != 0)
                             {
                                 lecturals = lecturals.Where(c => c.AcademicDegree.name == p).ToList();
                                 break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.AcademicDegree.name == p).ToListAsync();
+                            else
+                                lecturals = await _context.Lectural.Where(c => c.AcademicDegree.name == p).Include(c => c.Units)
+                                                                                                .Include(c => c.MilitaryRank)
+                                                                                                .Include(c => c.Position)
+                                                                                                .ToListAsync();
                             break;
 
-                        case 7:
+                        case 4:
                             if (lecturals.Count != 0)
                             {
                                 lecturals = lecturals.Where(c => c.FormSec == Int32.Parse(p)).ToList();
                                 break;
                             }
-                            lecturals = await _context.Lectural.Where(c => c.FormSec == Int32.Parse(p)).ToListAsync();
+                            else
+                                lecturals = await _context.Lectural.Where(c => c.FormSec == Int32.Parse(p)).Include(c => c.Units)
+                                                                                                .Include(c => c.MilitaryRank)
+                                                                                                .Include(c => c.Position)
+                                                                                                .ToListAsync();
+                            break;
+                        case 5:
+                            if (lecturals.Count != 0)
+                            {
+                                lecturals = lecturals.Where(c => c.Units.name == p).ToList();
+                                break;
+                            }
+                            else
+                                lecturals = await _context.Lectural.Where(c => c.Units.name == p).Include(c => c.Units)
+                                                                                                .Include(c => c.MilitaryRank)
+                                                                                                .Include(c => c.Position)
+                                                                                                .ToListAsync();
                             break;
 
                         default: break;
@@ -207,6 +208,7 @@ namespace LecturalAPI.Services
                                             .Include(c => c.MilitaryRank)
                                             .Include(c => c.AcademicTitle)
                                             .Include(c => c.AcademicDegree)
+                                            .Include(c => c.Units)
                                             .FirstOrDefaultAsync();
 
             if (lectural == null || lectural.id != id)
@@ -226,7 +228,6 @@ namespace LecturalAPI.Services
             lectural.serialAndNumderCivilyDocs = lecturalDTO.serialAndNumderCivilyDocs;
             lectural.dateOfStartService = lecturalDTO.dateOfStartService;
             lectural.isMarried = lecturalDTO.isMarried;
-            lectural.countOfChildren = lecturalDTO.countOfChildren;
             lectural.info = lecturalDTO.info;
 
             if (lectural.AcademicDegree != null)
@@ -282,7 +283,19 @@ namespace LecturalAPI.Services
                 MilitaryRank militaryRank = _context.MilitaryRank.Where(c => c.name == lecturalDTO.MilitaryRank).FirstOrDefault();
                 lectural.MilitaryRank = militaryRank;
             }
-
+            if (lectural.Units != null)
+            {
+                if (lectural.Units.name != lecturalDTO.Unit)
+                {
+                    var unit = _context.Units.Where(c => c.name == lecturalDTO.Unit).FirstOrDefault();
+                    lectural.Units = unit;
+                }
+            }
+            else
+            {
+                var unit = _context.Units.Where(c => c.name == lecturalDTO.Unit).FirstOrDefault();
+                lectural.Units = unit;
+            }
 
             _context.Entry(lectural).State = EntityState.Modified;
             try
@@ -349,9 +362,9 @@ namespace LecturalAPI.Services
             Position position = await _context.Position.Where(c => c.name == lecturalDTO.Position).FirstOrDefaultAsync();
             AcademicDegree academicDegree = await _context.AcademicDegree.Where(c => c.name == lecturalDTO.AcademicDegree).FirstOrDefaultAsync();
             AcademicTitle academicTitle = await _context.AcademicTitle.Where(c => c.name == lecturalDTO.AcademicTitle).FirstOrDefaultAsync();
+            Units units = await _context.Units.Where(c => c.name == lecturalDTO.Unit).FirstOrDefaultAsync();
 
-
-            Lectural newLecture = new Lectural(lecturalDTO, militaryRank, position, academicDegree, academicTitle);
+            Lectural newLecture = new Lectural(lecturalDTO, militaryRank, position, academicDegree, academicTitle, units);
 
             try
             {

@@ -15,7 +15,6 @@ namespace LecturalAPI.Models
         internal Cadet(CadetDB cadetDB)
         {
             id = cadetDB.id;
-            groupName = cadetDB.GroupDB.SpecializationDB.nameOfSpecialization;
             groupNumber = cadetDB.GroupDB.numberOfGroup;
             lastName = cadetDB.lastName;
             middleName = cadetDB.middleName;

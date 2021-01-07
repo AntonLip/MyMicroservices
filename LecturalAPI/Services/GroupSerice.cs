@@ -84,7 +84,6 @@ namespace LecturalAPI.Services
             grups.id = grups.id;
             grups.numberOfGroup = groupDTO.numberOfGroup;
             grups.info = groupDTO.info;
-            grups.CountCadets = groupDTO.CountCadets;
 
             if (groupDTO.nameOfSpecialization != grups.SpecializationDB.SpecializationCode)
             {
@@ -137,7 +136,6 @@ namespace LecturalAPI.Services
                 info = groupDTO.info,
                 SpecializationDB = spec,
                 ProfessionDB = prof,
-                CountCadets = groupDTO.CountCadets,
                 numberOfGroup = groupDTO.numberOfGroup,
                 ProfessionDBid = prof.id,
                 SpecializationDBid = spec.id
@@ -175,7 +173,6 @@ namespace LecturalAPI.Services
                 id = g.id,
                 nameOfSpecialization = g.SpecializationDB.SpecializationCode,
                 ProfessionLastName = g.ProfessionDB.nameOfProffession,
-                CountCadets = g.CountCadets,
                 numberOfGroup = g.numberOfGroup,
                 info = g.info
             };
