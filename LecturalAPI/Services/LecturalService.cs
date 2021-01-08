@@ -99,96 +99,135 @@ namespace LecturalAPI.Services
             lists.Add(formSec);
             lists.Add(unit);
             List<Lectural> lecturals = new List<Lectural>();
-            int cnt = 0;
+            int cntLoop = 0;
+            bool wasfirstReqestToDB = false;
             foreach (var p in lists)
             {
                 if (p != "undefined")
                 {
-                    switch (cnt)
+                    
+                    switch (cntLoop)
                     {                       
                         case 0:
-                            if (lecturals.Count != 0)
+                            if (wasfirstReqestToDB)
                             {
                                 lecturals = lecturals.Where(c => c.MilitaryRank.name == p).ToList();
                                 break;
                             }
                             else
-                                lecturals = await _context.Lectural.Where(c => c.MilitaryRank.name == p)
+                            {
+                                lecturals = await _context.Lectural.Where(c => c.MilitaryRank.name == p).Include(c => c.Units)
                                                                                                 .Include(c => c.MilitaryRank)
                                                                                                 .Include(c => c.Position)
+                                                                                                .Include(c => c.AcademicTitle)
+                                                                                                .Include(c => c.AcademicDegree)
                                                                                                 .ToListAsync();
-                            break;
+                                wasfirstReqestToDB = true;
+                                break;
+                            }
+                                
 
                         case 1:
-                            if (lecturals.Count != 0)
+                            if (wasfirstReqestToDB)
                             {
                                 lecturals = lecturals.Where(c => c.Position.name == p).ToList();
                                 break;
                             }
                             else
+                            {
                                 lecturals = await _context.Lectural.Where(c => c.Position.name == p).Include(c => c.Units)
                                                                                                 .Include(c => c.MilitaryRank)
                                                                                                 .Include(c => c.Position)
+                                                                                                .Include(c => c.AcademicTitle)
+                                                                                                .Include(c => c.AcademicDegree)
                                                                                                 .ToListAsync();
-                            break;
+                                wasfirstReqestToDB = true;
+                                break;
+                            }
+                                
 
                         case 2:
-                            if (lecturals.Count != 0)
+                            if (wasfirstReqestToDB)
                             {
                                 lecturals = lecturals.Where(c => c.AcademicTitle.name == p).ToList();
                                 break;
                             }
                             else
+                            {
+                                wasfirstReqestToDB = true;
                                 lecturals = await _context.Lectural.Where(c => c.AcademicTitle.name == p).Include(c => c.Units)
-                                                                                                .Include(c => c.MilitaryRank)
-                                                                                                .Include(c => c.Position)
-                                                                                                .ToListAsync();
-                            break;
+                                                                                               .Include(c => c.MilitaryRank)
+                                                                                               .Include(c => c.Position)
+                                                                                               .Include(c => c.AcademicTitle)
+                                                                                               .Include(c => c.AcademicDegree)
+                                                                                               .ToListAsync();
+                                break;
+                            }
+                               
+                            
 
                         case 3:
-                            if (lecturals.Count != 0)
+                            if (wasfirstReqestToDB)
                             {
                                 lecturals = lecturals.Where(c => c.AcademicDegree.name == p).ToList();
                                 break;
                             }
                             else
+                            {
                                 lecturals = await _context.Lectural.Where(c => c.AcademicDegree.name == p).Include(c => c.Units)
-                                                                                                .Include(c => c.MilitaryRank)
-                                                                                                .Include(c => c.Position)
-                                                                                                .ToListAsync();
-                            break;
+                                                                                                   .Include(c => c.MilitaryRank)
+                                                                                                   .Include(c => c.Position)
+                                                                                                   .Include(c => c.AcademicTitle)
+                                                                                                   .Include(c => c.AcademicDegree)
+                                                                                                   .ToListAsync();
+                                wasfirstReqestToDB = true;
+                                break;
+                            }
+                               
 
                         case 4:
-                            if (lecturals.Count != 0)
+                            if (wasfirstReqestToDB)
                             {
                                 lecturals = lecturals.Where(c => c.FormSec == Int32.Parse(p)).ToList();
                                 break;
                             }
                             else
+                            {
                                 lecturals = await _context.Lectural.Where(c => c.FormSec == Int32.Parse(p)).Include(c => c.Units)
-                                                                                                .Include(c => c.MilitaryRank)
-                                                                                                .Include(c => c.Position)
-                                                                                                .ToListAsync();
-                            break;
+                                                                                                    .Include(c => c.MilitaryRank)
+                                                                                                    .Include(c => c.Position)
+                                                                                                    .Include(c => c.AcademicTitle)
+                                                                                                    .Include(c => c.AcademicDegree)
+                                                                                                    .ToListAsync();
+                                wasfirstReqestToDB = true;
+                                break;
+                            }
+                                
                         case 5:
-                            if (lecturals.Count != 0)
+                            if (wasfirstReqestToDB)
                             {
                                 lecturals = lecturals.Where(c => c.Units.name == p).ToList();
                                 break;
                             }
                             else
+                            {
                                 lecturals = await _context.Lectural.Where(c => c.Units.name == p).Include(c => c.Units)
-                                                                                                .Include(c => c.MilitaryRank)
-                                                                                                .Include(c => c.Position)
-                                                                                                .ToListAsync();
-                            break;
+                                                                                                   .Include(c => c.MilitaryRank)
+                                                                                                   .Include(c => c.Position)
+                                                                                                   .Include(c => c.AcademicTitle)
+                                                                                                   .Include(c => c.AcademicDegree)
+                                                                                                   .ToListAsync();
+                                wasfirstReqestToDB = true;
+                                break;
+                            }
+                               
 
                         default: break;
 
                     }
 
                 }
-                cnt++;
+                cntLoop++;
             }
             if (lecturals == null)
                 return null;

@@ -53,6 +53,7 @@ namespace LecturalAPI.Services
             lists.Add(groupNumber);
             List<CadetDB> Cadets = new List<CadetDB>();
             int cnt = 0;
+            bool wasFirstReqestToDB = false;
             foreach (var p in lists)
             {
                 if (p != "undefined")
@@ -60,7 +61,7 @@ namespace LecturalAPI.Services
                     switch (cnt)
                     {
                         case 0:
-                            if (Cadets.Count != 0)
+                            if (wasFirstReqestToDB)
                             {
                                 Cadets = Cadets.Where(c => c.militaryRank == p).ToList();
                                 break;
@@ -68,27 +69,35 @@ namespace LecturalAPI.Services
                             else
                             {
                                 Cadets = await _context.Cadet.Where(c => c.militaryRank == p).Include(c => c.GroupDB).ToListAsync();
+                                wasFirstReqestToDB = true;
                                 break;
                             }
                         case 1:
-                            if (Cadets.Count != 0)
+                            if (wasFirstReqestToDB)
                             {
                                 Cadets = Cadets.Where(c => c.Position == p).ToList();
                                 break;
                             }
-                            else
+                            else 
+                            {
                                 Cadets = await _context.Cadet.Where(c => c.Position == p).Include(c => c.GroupDB).ToListAsync();
-                            break;
+                                wasFirstReqestToDB = true;
+
+                                break;
+                            }
+                                
                         case 2:
-                            if (Cadets.Count != 0)
+                            if (wasFirstReqestToDB)
                             {
                                 Cadets = Cadets.Where(c => c.GroupDB.numberOfGroup == p).ToList();
                                 break;
                             }
                             else
+                            {
+                                wasFirstReqestToDB = true;
                                 Cadets = await _context.Cadet.Where(c => c.GroupDB.numberOfGroup == p).Include(c => c.GroupDB).ToListAsync();
-                            break;
-
+                                break;
+                            }
                         default: break;
                     }
                 }

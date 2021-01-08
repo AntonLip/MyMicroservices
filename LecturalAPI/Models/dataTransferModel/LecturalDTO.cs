@@ -33,6 +33,7 @@ namespace LecturalAPI.Models.dataTransferModel
             FormSec = lecturalDB.FormSec;
             DateFormSec = lecturalDB.DateFormSec;
             Unit = lecturalDB.Units.name;
+            telephoneNumber = lecturalDB.telephoneNumber;
             if (lecturalDB.MilitaryRank == null)
             {
                 MilitaryRank = "none";
@@ -101,6 +102,7 @@ namespace LecturalAPI.Models.dataTransferModel
         public string serialAndNumderMilitaryDocs { get; set; }
         public int FormSec { get; set; }
         public DateTime DateFormSec { get; set; }
+        public string telephoneNumber { get; set; }
         public string Unit { get;  set; }
     }
 
@@ -118,6 +120,7 @@ namespace LecturalAPI.Models.dataTransferModel
             lastName = lecturalDB.lastName;
             pathPhotoSmall = lecturalDB.pathPhotoSmall;
             pathPhotoBig = lecturalDB.pathPhotoBig;
+            telephoneNumber = lecturalDB.telephoneNumber;
             if (lecturalDB.MilitaryRank == null)
             {
                 MilitaryRank = "none";
@@ -153,6 +156,7 @@ namespace LecturalAPI.Models.dataTransferModel
         public string MilitaryRank { get; set; }
         public string Position { get; set; }
         public string unit { get; set; }
+        public string telephoneNumber { get; set; }
     }
 }
 

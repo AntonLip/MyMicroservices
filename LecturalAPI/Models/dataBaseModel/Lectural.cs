@@ -31,6 +31,7 @@ namespace LecturalAPI.Models
             DateFormSec = lecturalDTO.DateFormSec;
             dateOfExpiry = lecturalDTO.dateOfExpiry;
             dateOfIssue = lecturalDTO.dateOfIssue;
+            telephoneNumber = lecturalDTO.telephoneNumber;
             Units = units;
         }
 
