@@ -60,6 +60,7 @@ namespace IdentitySerrver4
                                        "http://k41.Kafedra41.local",
                                        "http://k41.Kafedra41.local:90",
                                        "http://192.168.7.2:3000",
+                                       "http://192.168.7.32:3000",
                                        "http://192.168.7.2");
                     policy.AllowCredentials();
                 });

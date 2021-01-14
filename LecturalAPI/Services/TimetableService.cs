@@ -144,26 +144,26 @@ namespace LecturalAPI.Services
             {
                 if (startDate != MyBD)
                 {
-                    timetable = timetable.Where(c => c.date > startDate).ToList();
+                    timetable = timetable.Where(c => c.date >= startDate).ToList();
                 }
                 if (stopDate != MyBD)
                 {
-                    timetable = timetable.Where(c => c.date < stopDate).ToList();
+                    timetable = timetable.Where(c => c.date <= stopDate).ToList();
                 }
             }
             else
             {
                 if (startDate != MyBD && stopDate != MyBD)
                 {
-                    timetable = await _context.Timetable.Where(c => c.date > startDate && c.date < stopDate).ToListAsync();
+                    timetable = await _context.Timetable.Where(c => c.date >= startDate && c.date <= stopDate).ToListAsync();
                 }
                 else if (startDate != MyBD)
                 {
-                    timetable = await _context.Timetable.Where(c => c.date > startDate).ToListAsync();
+                    timetable = await _context.Timetable.Where(c => c.date >= startDate).ToListAsync();
                 }
                 else if (stopDate != MyBD)
                 {
-                    timetable = await _context.Timetable.Where(c => c.date < stopDate).ToListAsync();
+                    timetable = await _context.Timetable.Where(c => c.date <= stopDate).ToListAsync();
                 }
             }
             if (timetable == null)

@@ -83,14 +83,18 @@ namespace LecturalAPI.Controllers
 
         #region Post
         [HttpPost]
-        public async Task<ActionResult<DisciplineDTOTimetable>> PostDisciplineDB(DisciplineDTOTimetable discipline)
+        public async Task<ActionResult<DisciplineDTOTimetable>> PostDisciplineDB(DisciplineDTOTimetable discipline, [FromForm] IFormFile body)
         {
            
             var d = await _disciplineService.AddDisciplineAsync(discipline);
+            if (d != null)
+            {
+                await _disciplineService.AddPlan(d.id, body);
+            }
             /* _context.Discipline.Add(disciplineDB);
              await _context.SaveChangesAsync();*/
 
-            return CreatedAtAction("GetDisciplineDB", new { id = discipline.id }, discipline);
+            return CreatedAtAction("GetDisciplineDB", new { id = d.id }, d);
         }
 
         [HttpPost]

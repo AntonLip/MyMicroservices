@@ -28,6 +28,7 @@ namespace LecturalAPI.Models.dataTransferModel.TimeTableDTO
             auditore = timetableDB.auditore;
             numberOfLessonInDay = timetableDB.numberOfLessonInDay;
         }
+        
         public Guid id { get; set; }
         public int numberOfWeek { get; set; }
         public string dayOfWeek { get; set; }

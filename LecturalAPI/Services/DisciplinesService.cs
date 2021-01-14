@@ -70,8 +70,9 @@ namespace LecturalAPI.Services
                     throw;
                 }
             }
-
-            return discipline;
+           var d =  _context.Discipline.ElementAt(_context.Discipline.Count() - 1);
+            DisciplineDTOTimetable disciplineDTO = new DisciplineDTOTimetable(d);
+            return disciplineDTO;
         }
 
 

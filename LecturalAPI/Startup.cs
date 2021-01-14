@@ -31,6 +31,7 @@ namespace LecturalAPI
                                     "http://k41.Kafedra41.local",
                                     "http://k41.Kafedra41.local:90",
                                     "http://192.168.7.2:3000",
+                                    "http://192.168.7.32:3000",
                                     "http://192.168.7.2")
                        .AllowAnyHeader()
                        .AllowAnyMethod()
@@ -97,17 +98,6 @@ namespace LecturalAPI
             {
                 await context.Response.WriteAsync("api1 is running");
             });
-
-            //app.UseHttpsRedirection();
-
-            //app.UseRouting();
-
-            //app.UseAuthorization();
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapDefaultControllerRoute()
-            //        .RequireAuthorization("ApiScope");
-            //});
 
         }
     }

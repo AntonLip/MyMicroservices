@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LecturalAPI.Models;
 using LecturalAPI.Models.dataBaseModel;
+using LecturalAPI.Models.dataTransferModel;
 
 namespace LecturalAPI.Controllers
 {
@@ -23,9 +24,16 @@ namespace LecturalAPI.Controllers
 
         // GET: api/SpecializationDBs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SpecializationDB>>> GetSpecialization()
+        public async Task<ActionResult<IEnumerable<SpecializationDTO>>> GetSpecialization()
         {
-            return await _context.Specialization.ToListAsync();
+            var specializations =  await _context.Specialization.ToListAsync();
+
+            var specializationsDTO = new List<SpecializationDTO>();
+            foreach (var s in specializations)
+            {
+                specializationsDTO.Add(new SpecializationDTO(s));
+            }
+            return specializationsDTO;
         }
 
         // GET: api/SpecializationDBs/5

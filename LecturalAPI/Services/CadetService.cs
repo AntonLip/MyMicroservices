@@ -222,6 +222,7 @@ namespace LecturalAPI.Services
             return cadetDB;
            
         }
+        
         private bool CadetDBExists(Guid id)
         {
             return _context.Cadet.Any(e => e.id == id);
