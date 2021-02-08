@@ -31,38 +31,25 @@ namespace LecturalAPI.Models.dataTransferModel
             whoGetPassport = lecturalDB.whoGetPassport;
             nameOFVoinkom = lecturalDB.nameOFVoinkom;
             FormSec = lecturalDB.FormSec;
-            DateFormSec = lecturalDB.DateFormSec;
-            Unit = lecturalDB.Units.name;
+            DateFormSec = lecturalDB.DateFormSec;            
             telephoneNumber = lecturalDB.telephoneNumber;
-            if (lecturalDB.MilitaryRank == null)
+            if (lecturalDB.Units != null)
             {
-                MilitaryRank = "none";
+                Unit = lecturalDB.Units.name;
             }
-            else
+            if (lecturalDB.MilitaryRank != null)
             {
                 MilitaryRank = lecturalDB.MilitaryRank.name;
             }
-            if (lecturalDB.Position == null)
-            {
-                Position = "none";
-            }
-            else
+            if (lecturalDB.Position != null)
             {
                 Position = lecturalDB.Position.name;
             }
-            if (lecturalDB.AcademicTitle == null)
-            {
-                AcademicTitle = "none";
-            }
-            else
+            if (lecturalDB.AcademicTitle != null)
             {
                 AcademicTitle = lecturalDB.AcademicTitle.name;
             }
-            if (lecturalDB.AcademicDegree == null)
-            {
-                AcademicDegree = "none";
-            }
-            else
+            if (lecturalDB.AcademicDegree != null)
             {
                 AcademicDegree = lecturalDB.AcademicDegree.name;
             }

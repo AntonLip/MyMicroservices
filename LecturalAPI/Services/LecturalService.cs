@@ -78,6 +78,7 @@ namespace LecturalAPI.Services
                                                     .Include(c => c.MilitaryRank)
                                                     .Include(c => c.AcademicTitle)
                                                     .Include(c => c.AcademicDegree)
+                                                    .Include(s => s.Units)
                                                     .FirstOrDefaultAsync();
             if (lecturalDB != null)
             {

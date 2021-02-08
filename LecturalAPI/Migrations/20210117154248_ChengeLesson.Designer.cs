@@ -4,14 +4,16 @@ using LecturalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LecturalAPI.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20210117154248_ChengeLesson")]
+    partial class ChengeLesson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,19 +271,10 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("AdditionalInfoDoc")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("MethodicDoc")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("Presentation")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("info")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("nameOfType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("shortNameOfType")
@@ -326,9 +319,6 @@ namespace LecturalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("AdditionalMaterial")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<Guid?>("Disciplineid")
                         .HasColumnType("uniqueidentifier");
 
@@ -338,12 +328,6 @@ namespace LecturalAPI.Migrations
                     b.Property<Guid?>("LessonTypeDBid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("MethodicMaterials")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("Presentation")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<int>("countHours")
                         .HasColumnType("int");
 
@@ -351,6 +335,9 @@ namespace LecturalAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("pathToMaterials")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("sectionName")

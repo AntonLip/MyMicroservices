@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using LecturalAPI.Models;
 using LecturalAPI.Models.dataTransferModel;
 using LecturalAPI.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace LecturalAPI.Controllers
 {
@@ -20,73 +21,61 @@ namespace LecturalAPI.Controllers
             //_context = context;
             _lessonsService = new LessonsService(context);
         }
-
-        // GET: api/LessonDTOes
+        #region GET
+        // GET: api/DisciplineDBs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LessonDTO>>> GetLessonDTO()
+        public async Task<IEnumerable<LessonDTO>> GetLessons()
         {
-            return await _lessonsService.GetAllLessonsAsync();
+            var lessons = await _lessonsService.GetLessonsAsync();
+            if(lessons != null)
+                return (lessons);
+
+            return null;
         }
 
-        // GET: api/LessonDTOes/5
+        // GET: api/DisciplineDBs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<LessonDTO>> GetLessonDTO(Guid id)
+        public async Task<LessonDTO> GetLessonById(Guid id)
         {
-            var lessonDTO = await _lessonsService.GetLessonByIdAsync(id);
+            var lessons = await _lessonsService.GetLessonByIdAsync(id);
 
-            if (lessonDTO == null)
-            {
-                return NotFound();
-            }
-
-            return lessonDTO;
+            return lessons;
         }
+        #endregion
 
-        // PUT: api/LessonDTOes/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLessonDTO(Guid id, LessonDTO lessonDTO)
+
+
+
+        #region POST
+        [HttpPost]
+        public async Task<ActionResult<LessonDTO>> PostLesson(LessonDTO lesson)
         {
-            if (id != lessonDTO.id)
+            var lessons = await _lessonsService.CreateLesson(lesson);
+            if (lesson != null)
             {
-                return BadRequest();
+                return CreatedAtAction("GetLessonById", new { id = lesson.id }, lesson);
             }
-
-            var les = await _lessonsService.UpdateLessonAsync(id, lessonDTO);
-
-            if(les == null)
-            { 
-                return NotFound();
-            }
-
             return NoContent();
         }
+        #endregion
 
-        // POST: api/LessonDTOes
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<LessonDTO>> PostLessonDTO(LessonDTO lessonDTO)
+
+
+        #region Upload
+        [HttpPut]
+        [Route("upload")]
+        public async Task<IActionResult> AddMaterialsAsync(Guid id, [FromForm] IFormFile body, string path)
         {
-            var newLesson = await _lessonsService.AddlessonAsync(lessonDTO);
-
-            return CreatedAtAction("GetLessonDTO", new { id = newLesson.id }, newLesson);
-        }
-
-        // DELETE: api/LessonDTOes/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<LessonDTO>> DeleteLessonDTO(Guid id)
-        {
-            var lessonDTO = await _lessonsService.DeleteLessonAsync(id);
-            if (lessonDTO == null)
+            try
             {
-                return NotFound();
+                await _lessonsService.SaveDoc(id, body, path);
+                return Ok();
             }
-
-            return lessonDTO;
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
-
-
+        #endregion
     }
 }

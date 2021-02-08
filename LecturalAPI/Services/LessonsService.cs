@@ -4,8 +4,10 @@ using LecturalAPI.Models.dataTransferModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace LecturalAPI.Services
 {
@@ -16,164 +18,94 @@ namespace LecturalAPI.Services
         {
             _context = context;
         }
-        internal async Task<List<LessonDTO>> GetAllLessonsAsync()
+        public async Task<IEnumerable<LessonDTO>> GetLessonsAsync()
         {
-            var lessonsDB = await _context.Lesson.Include(c => c.Lectural)
-                                               .Include(s => s.LessonTypeDB)
-                                               .Include(s => s.Discipline)
-                                               .ToListAsync();
+            var lesson = await _context.Lesson.Include(c => c.LessonTypeDB).Include(c => c.Discipline).ToListAsync();
             List<LessonDTO> lessons = new List<LessonDTO>();
-            foreach (var lessonDB in lessonsDB)
+            foreach (var l in lesson)
             {
-                lessons.Add(new LessonDTO(lessonDB));
+                lessons.Add(new LessonDTO(l));
             }
             return lessons;
         }
-        internal async Task<LessonDTO> GetLessonByIdAsync(Guid id)
-        {
-            var lessonsDB = await _context.Lesson.Include(c => c.Lectural)
-                                              .Include(s => s.LessonTypeDB)
-                                              .Include(s => s.Discipline)
-                                              .FirstOrDefaultAsync();
-            LessonDTO lessonDTO = new LessonDTO(lessonsDB);
-
-            return lessonDTO;
-        }
 
 
 
-        internal async Task<LessonDTO> AddlessonAsync(LessonDTO lessonDTO)
-        {
-            var lectural = await _context.Lectural.Where(c => c.id == lessonDTO.lecturalId).FirstOrDefaultAsync();
-            var gr = await _context.Discipline.Where(c => c.name == lessonDTO.disciplineName).FirstOrDefaultAsync();
-            var lessonType = await _context.LessonType.Where(c => c.nameOfType == lessonDTO.lessonType).FirstOrDefaultAsync();
-            if (gr == null || lectural == null || lessonType == null)
-            {
-                return null;
-            }
-            LessonDB lessonDB = new LessonDB(lectural, gr, lessonType, lessonDTO);
-            try
-            {
-                _context.Lesson.Add(lessonDB);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LessonDTOExists(lessonDB.id))
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return lessonDTO;
-        }
-        internal async Task<LessonDTO> UpdateLessonAsync(Guid id, LessonDTO lessonDTO)
-        {
-            var lessonsDB = await _context.Lesson.Include(c => c.Lectural)
-                                               .Include(s => s.LessonTypeDB)
-                                               .Include(s => s.Discipline)
-                                               .FirstOrDefaultAsync();
-
-            if (lessonsDB == null || lessonDTO.id != id || lessonDTO.lecturalId == null || lessonDTO.disciplineId == null)
-            {
-                return null;
-            }
-
-            lessonsDB = await ModifyLesson(lessonsDB, lessonDTO);
-
-            _context.Entry(lessonsDB).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-                return lessonDTO;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LessonDTOExists(id))
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-
-        internal async Task<LessonDTO> DeleteLessonAsync(Guid id)
-        {
-            var lessonDb = await _context.Lesson.FindAsync(id);
-            if (lessonDb == null)
-            {
-                return null;
-            }
-            _context.Lesson.Remove(lessonDb);
-            await _context.SaveChangesAsync();
-
-            LessonDTO lesson = new LessonDTO(lessonDb);
-
-            return lesson;
-        }
-
-        private async Task<LessonDB> ModifyLesson(LessonDB lessonDB, LessonDTO lessonDTO)
-        {
-            lessonDB.id = lessonDTO.id;
-            lessonDB.countHours = lessonDTO.countHours;
-            lessonDB.name = lessonDTO.name;
-            lessonDB.pathToMaterials = lessonDTO.pathToMaterials;
-            lessonDB.sectionName = lessonDTO.sectionName;
-            lessonDB.themeName = lessonDTO.themeName;
-
-
-            if (lessonDB.Discipline != null)
-            {
-                if (lessonDB.Discipline.id != lessonDTO.disciplineId)
-                {
-                    DisciplineDB disciplineDB = await _context.Discipline.Where(c => c.id == lessonDTO.disciplineId).FirstOrDefaultAsync();
-                    lessonDB.Discipline = disciplineDB;
-                }
-            }
-            else
-            {
-                DisciplineDB disciplineDB = await _context.Discipline.Where(c => c.id == lessonDTO.disciplineId).FirstOrDefaultAsync();
-                lessonDB.Discipline = disciplineDB;
-            }
-            if (lessonDB.Lectural != null)
-            {
-                if (lessonDB.Lectural.id != lessonDTO.lecturalId)
-                {
-                    Lectural lectural = await _context.Lectural.Where(c => c.id == lessonDTO.lecturalId).FirstOrDefaultAsync();
-                    lessonDB.Lectural = lectural;
-                }
-            }
-            else
-            {
-                Lectural lectural = await _context.Lectural.Where(c => c.id == lessonDTO.lecturalId).FirstOrDefaultAsync();
-                lessonDB.Lectural = lectural;
-            }
-
-            if (lessonDB.LessonTypeDB != null)
-            {
-                if (lessonDB.LessonTypeDB.nameOfType != lessonDTO.lessonType)
-                {
-                    LessonTypeDB type = _context.LessonType.Where(c => c.nameOfType == lessonDTO.lessonType).FirstOrDefault();
-                    lessonDB.LessonTypeDB = type;
-                }
-            }
-            else
-            {
-                LessonTypeDB type = _context.LessonType.Where(c => c.nameOfType == lessonDTO.lessonType).FirstOrDefault();
-                lessonDB.LessonTypeDB = type;
-            }
-            return lessonDB;
-        }
         private bool LessonDTOExists(Guid id)
         {
             return _context.Lesson.Any(e => e.id == id);
         }
+
+        internal async Task<LessonDTO> GetLessonByIdAsync(Guid id)
+        {
+            var lesson = await _context.Lesson.Include(c => c.LessonTypeDB).Include(c => c.Discipline).FirstAsync(c => c.id == id);
+
+            return new LessonDTO(lesson);
+        }
+
+        internal async Task<LessonDTO> CreateLesson(LessonDTO lesson)
+        {
+            var disciplineDB = await _context.Discipline.Where(c => c.id == lesson.DisciplineId).FirstOrDefaultAsync();
+            var lessonType = await _context.LessonType.Where(c => c.name == lesson.lessonType).FirstOrDefaultAsync();
+            if(disciplineDB != null && lessonType != null)
+            {
+                LessonDB lessonDB = new LessonDB(disciplineDB, lessonType, lesson);
+                try
+                {
+                    _context.Lesson.Add(lessonDB);
+                    await _context.SaveChangesAsync();
+                    return lesson;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    if (!LessonDTOExists(lessonDB.id))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        internal async Task SaveDoc(Guid id, IFormFile body, string path)
+        {
+            
+            try
+            {
+                var lesson = await _context.Lesson.Where(c => c.id == id).FirstOrDefaultAsync();
+                byte[] fileBytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await body.CopyToAsync(memoryStream);
+                    fileBytes = memoryStream.ToArray();
+                }
+                if (lesson != null)
+                {
+                    switch (path)
+                    {
+                        case "Methodic": lesson.MethodicMaterials = fileBytes;break;
+                        case "Additional": lesson.AdditionalMaterial = fileBytes; break;
+                        case "Presentation": lesson.Presentation = fileBytes; break;
+                        default:break;
+                    }
+                   
+
+                }
+                _context.Entry(lesson).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                
+            }
+        }
+
+
     }
 }

@@ -70,7 +70,7 @@ namespace LecturalAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/LessonType

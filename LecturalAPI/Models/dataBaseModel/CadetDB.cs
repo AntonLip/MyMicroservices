@@ -32,7 +32,6 @@ namespace LecturalAPI.Models
         public Guid id { get; set; }
         public Guid GroupDBid { get; set; }
         public GroupDB GroupDB { get; set; }
-       
         public string lastName { get; set; }
         public string firstName { get; set; }
         public string middleName { get; set; }

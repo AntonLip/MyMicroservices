@@ -27,6 +27,7 @@ namespace LecturalAPI.Models
             dateOfStartService = cadetDB.dateOfStartService;
             militaryRank = cadetDB.militaryRank;
             info = cadetDB.info;
+            groupName = cadetDB.GroupDB.SpecializationDB.nameOfSpecialization;
         }
 
         public Guid id { get; set; }

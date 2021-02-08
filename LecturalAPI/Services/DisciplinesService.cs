@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace LecturalAPI.Services
@@ -16,6 +15,7 @@ namespace LecturalAPI.Services
     {
         private readonly AppdbContext _context;
         IWebHostEnvironment _webHost;
+
         public DisciplinesService(AppdbContext context, IWebHostEnvironment webHost)
         {
             _context = context;
@@ -46,6 +46,48 @@ namespace LecturalAPI.Services
             }
             return null;
         }
+
+        public async Task<List<LessonDTO>> GetLessonInDisciplineDB(Guid id)
+        {
+            var lessons = await _context.Lesson.Where(c => c.Discipline.id == id).Include(c => c.LessonTypeDB)
+                                                          .Include(c => c.Discipline).ToListAsync();
+            if(lessons != null)
+            {
+                var lessonsDTO = new List<LessonDTO>();
+                foreach (var l in lessons)
+                {
+                    lessonsDTO.Add(new LessonDTO(l));
+                }
+                return lessonsDTO;
+            }
+
+            throw new ArgumentNullException();
+        }
+
+
+        public async Task<List<DisciplinesName>> GetFilteredDicsiplines(string specName, int year)
+        {
+            try
+            {
+                var disceplines = await _context.Discipline.Where(d => d.SpecializationDB.nameOfSpecialization == specName)
+                    .Where(d => d.Semester == (year * 2 - 1) || d.Semester == (year * 2)).ToListAsync();
+
+                var disciplinesNames = new List<DisciplinesName>();
+
+                foreach (var d in disceplines)
+                {
+                    disciplinesNames.Add(new DisciplinesName(d));
+                }
+
+                return disciplinesNames;
+
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
         #endregion
 
         internal async Task<DisciplineDTOTimetable> AddDisciplineAsync(DisciplineDTOTimetable discipline)
@@ -75,9 +117,8 @@ namespace LecturalAPI.Services
             return disciplineDTO;
         }
 
+       
 
-
-        
         private bool DisciplineDBExists(Guid id)
         {
             return _context.Discipline.Any(e => e.id == id);

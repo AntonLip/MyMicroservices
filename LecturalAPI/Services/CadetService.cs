@@ -17,7 +17,7 @@ namespace LecturalAPI.Services
 
         public CadetService(AppdbContext context)
         {
-            _context = context;          
+            _context = context;  
 
         }
 
@@ -34,6 +34,7 @@ namespace LecturalAPI.Services
             }
             return cadetsDTO;
         }
+        
         internal async Task<Cadet> GetCadetByIdAsync(Guid id)
         {
             var grups = await _context.Cadet.Where(c => c.id == id).Include(c => c.GroupDB)
@@ -68,7 +69,8 @@ namespace LecturalAPI.Services
                             }
                             else
                             {
-                                Cadets = await _context.Cadet.Where(c => c.militaryRank == p).Include(c => c.GroupDB).ToListAsync();
+                                Cadets = await _context.Cadet.Where(c => c.militaryRank == p).Include(c => c.GroupDB)
+                                    .ToListAsync();
                                 wasFirstReqestToDB = true;
                                 break;
                             }

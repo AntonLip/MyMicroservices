@@ -38,7 +38,7 @@ namespace LecturalAPI.Services
 
         }
 
-        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetAllTimetableByDayAsync(DateTime currentDate)
+        internal async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetAllTimetableByDayAsync(DateTime currentDate)
         {
             var timetable = await _context.Timetable.Where(c => c.date == currentDate).ToListAsync();
 
@@ -50,12 +50,12 @@ namespace LecturalAPI.Services
                 {
                     timetableOUT.Add(new TTDTOOut(t));
                 }
-                return timetableOUT;
+                return GroupByDate(timetableOUT);
             }
             return null;
         }
 
-        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayForGroupAsync(string group, DateTime dateTime)
+        internal async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetTimetableOnDayForGroupAsync(string group, DateTime dateTime)
         {
             var timetable = await _context.Timetable.Where(c => c.date == dateTime && c.numberOfGroup == group).ToListAsync();
 
@@ -67,12 +67,12 @@ namespace LecturalAPI.Services
                 {
                     timetableOUT.Add(new TTDTOOut(t));
                 }
-                return timetableOUT;
+                return GroupByDate(timetableOUT);
             }
             return null;
         }
 
-        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayForLecturalAsync(string lectural, DateTime dateTime)
+        internal async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetTimetableOnDayForLecturalAsync(string lectural, DateTime dateTime)
         {
             var timetable = await _context.Timetable.Where(c => c.date == dateTime && c.Lectural == lectural).ToListAsync();
 
@@ -84,12 +84,12 @@ namespace LecturalAPI.Services
                 {
                     timetableOUT.Add(new TTDTOOut(t));
                 }
-                return timetableOUT;
+                return GroupByDate(timetableOUT);
             }
             return null;
         }
 
-        internal async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate)
+        internal async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate)
         {
             List<string> filterParams = new List<string>();
             filterParams.Add(lectural);
@@ -174,7 +174,22 @@ namespace LecturalAPI.Services
                 timetablelDTO.Add(new TTDTOOut(l));
             }
 
-            return timetablelDTO;
+            return GroupByDate(timetablelDTO);
+        }
+
+        private ActionResult<IEnumerable<IEnumerable<TTDTOOut>>> GroupByDate(List<TTDTOOut> timetablelDTO)
+        {
+            if (timetablelDTO == null)
+            {
+                return null;
+            }
+            else
+            {               
+                List<List<TTDTOOut>> listsTT = new List<List<TTDTOOut>>();
+                listsTT = timetablelDTO.GroupBy(t => t.date).Select(g => g.ToList()).ToList();
+                return listsTT;
+            }
+            
         }
 
 
@@ -481,5 +496,10 @@ namespace LecturalAPI.Services
         {
             return _context.Timetable.Any(e => e.id == id);
         }
+
+
+        
+
+
     }
 }

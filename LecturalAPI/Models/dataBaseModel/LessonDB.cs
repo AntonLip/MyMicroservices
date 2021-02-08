@@ -1,5 +1,6 @@
 ﻿using LecturalAPI.Models.dataTransferModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace LecturalAPI.Models.dataBaseModel
 {
-    public class LessonDB
+    public class LessonDB 
     {
         internal LessonDB()
         {
         }
 
-        internal LessonDB(Lectural lecturalDB, DisciplineDB discipline, LessonTypeDB lessonType, LessonDTO lessonDTO) 
+        internal LessonDB(DisciplineDB discipline, LessonTypeDB lessonType, LessonDTO lessonDTO) 
         {
             this.id = lessonDTO.id;
             this.name = lessonDTO.name;
@@ -21,7 +22,6 @@ namespace LecturalAPI.Models.dataBaseModel
             this.themeName = lessonDTO.themeName;
             this.countHours = lessonDTO.countHours;
 
-            this.Lectural = lecturalDB;
             this.LessonTypeDB = lessonType;
             this.Discipline = discipline;
             this.currentNumberOflessonsType = lessonDTO.currentNumberOflessonsType;
@@ -36,13 +36,15 @@ namespace LecturalAPI.Models.dataBaseModel
         public int countHours { get; set; }
         public int currentNumberOflessonsType { get; set; }
 
-        public string pathToMaterials { get; set; }
+        public byte[]? MethodicMaterials { get; set; }
+        public byte[]? AdditionalMaterial { get; set; }
+        public byte[]? Presentation { get; set; }
         //Link to videos
         //Link to literature
         public LessonTypeDB LessonTypeDB { get; set; }
-        internal Lectural Lectural { get; set; }
         public DisciplineDB Discipline { get; set; }
         public List<TimetableDB> TimetableDB { get; set; }
 
+       
     }
 }

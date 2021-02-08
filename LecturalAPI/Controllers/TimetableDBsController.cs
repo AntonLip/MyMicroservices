@@ -46,7 +46,7 @@ namespace LecturalAPI.Controllers
         }
 
         [HttpGet("{dateTime:DateTime}")]
-        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDay(DateTime dateTime)
+        public async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetTimetableOnDay(DateTime dateTime)
         {
             var timetableDB = await _timetableService.GetAllTimetableByDayAsync(dateTime);
 
@@ -59,7 +59,7 @@ namespace LecturalAPI.Controllers
         }
 
         [Route("forGroup")]
-        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayByGroupAsync(DateTime dateTime, string groupDTO)
+        public async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetTimetableOnDayByGroupAsync(DateTime dateTime, string groupDTO)
         {
             var timetableDB = await _timetableService.GetTimetableOnDayForGroupAsync(groupDTO, dateTime);
 
@@ -72,7 +72,7 @@ namespace LecturalAPI.Controllers
         }
 
         [Route("forLectural")]
-        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableOnDayByLecturalAsync(DateTime dateTime, string lectural)
+        public async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetTimetableOnDayByLecturalAsync(DateTime dateTime, string lectural)
         {
             var timetableDB = await _timetableService.GetTimetableOnDayForLecturalAsync(lectural, dateTime);
 
@@ -85,7 +85,7 @@ namespace LecturalAPI.Controllers
         }
 
         [Route("GetFileteredTimetable")]
-        public async Task<ActionResult<IEnumerable<TTDTOOut>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate)
+        public async Task<ActionResult<IEnumerable<IEnumerable<TTDTOOut>>>> GetTimetableFilteredData(string lectural, string discipline, string group, DateTime startDate, DateTime stopDate)
         {
             var timetableDB = await _timetableService.GetTimetableFilteredData(lectural, discipline, group, startDate, stopDate);
 

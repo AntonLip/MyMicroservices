@@ -7,11 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LecturalAPI.Models;
 using LecturalAPI.Services;
-using LecturalAPI.Models.dataBaseModel;
 using Microsoft.AspNetCore.Hosting;
-using System.Net.Http;
-using Microsoft.Web.Helpers;
-using System.IO;
 using LecturalAPI.Models.dataTransferModel;
 
 namespace LecturalAPI.Controllers
@@ -35,66 +31,122 @@ namespace LecturalAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DisciplineDTOTimetable>>> GetDiscipline()
         {
-            var disc = await _context.Discipline.ToListAsync();
-            if (disc != null) 
+            try
             {
-                List<DisciplineDTOTimetable> disciplineDTOTimetable = new List<DisciplineDTOTimetable>();
+                 var disc = await _context.Discipline.ToListAsync();
+                 List<DisciplineDTOTimetable> disciplineDTOTimetable = new List<DisciplineDTOTimetable>();
 
-                foreach (var d in disc)
-                {
-                    disciplineDTOTimetable.Add(new DisciplineDTOTimetable(d));
-                }
+                 foreach (var d in disc)
+                 {
+                     disciplineDTOTimetable.Add(new DisciplineDTOTimetable(d));
+                 }
 
-                return disciplineDTOTimetable;
+                 return disciplineDTOTimetable;
+
             }
-            return NoContent();
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+
         }
 
         // GET: api/DisciplineDBs/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DisciplineDTOTimetable>> GetDisciplineDB(Guid id)
         {
-            var d = await _disciplineService.GetDisciplineById(id);
-            if (d == null)
+            try
             {
-                return NotFound();
+                return await _disciplineService.GetDisciplineById(id);
+
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id:Guid}/lessons")]
+        public async Task<ActionResult<IEnumerable<LessonDTO>>> GetLessonInDisciplineDB(Guid id)
+        {
+            try
+            {
+                return await _disciplineService.GetLessonInDisciplineDB(id);
+
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
             }
 
-            return d;
+           
         }
+
+        [HttpGet]
+        [Route("filter")]
+        public async Task<ActionResult<IEnumerable<LessonDTO>>> GetFilteredDisciplineDB(string specName, int year)
+        {
+            try
+            {
+                var d = await _disciplineService.GetFilteredDicsiplines(specName, year);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
+            return NotFound();
+        }
+        
 
         // GET: api/DisciplineDBs/Names
         [Route("Names")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DisciplinesName>>> GetDisciplineDBNames()
         {
-            var disciplines = await _disciplineService.GetDisciplineNames();
-            
-            if (disciplines != null)
+            try
             {
-                
+                var disciplines = await _disciplineService.GetDisciplineNames();
                 return disciplines;
             }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
-            return NotFound();
         }
 
         #endregion
 
         #region Post
         [HttpPost]
-        public async Task<ActionResult<DisciplineDTOTimetable>> PostDisciplineDB(DisciplineDTOTimetable discipline, [FromForm] IFormFile body)
+        public async Task<ActionResult<DisciplineDTOTimetable>> PostDisciplineDB(DisciplineDTOTimetable discipline)
         {
            
             var d = await _disciplineService.AddDisciplineAsync(discipline);
             if (d != null)
             {
-                await _disciplineService.AddPlan(d.id, body);
             }
-            /* _context.Discipline.Add(disciplineDB);
-             await _context.SaveChangesAsync();*/
+            
 
-            return CreatedAtAction("GetDisciplineDB", new { id = d.id }, d);
+            return Ok(d);
         }
 
         [HttpPost]
