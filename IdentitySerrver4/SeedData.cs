@@ -13,7 +13,7 @@ namespace IdentitySerrver4
 {
     public class SeedData
     {
-        public static void EnsureSeedData(string connectionString)
+        public static async System.Threading.Tasks.Task EnsureSeedDataAsync(string connectionString)
         {
             var services = new ServiceCollection();
             services.AddLogging();
@@ -30,72 +30,50 @@ namespace IdentitySerrver4
                 {
                     var context = scope.ServiceProvider.GetService<AppDBContext>();
                     context.Database.Migrate();
-
-                    var userMgr = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<AppUser>>();
-                    var alice = userMgr.FindByNameAsync("alice").Result;
-                    if (alice == null)
+                    try
                     {
-                        alice = new AppUser
+                        var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                        var admin =  userMgr.FindByNameAsync("admin").Result;
+                        if (admin is null)
                         {
-                            UserName = "alice",
-                            Email = "AliceSmith@email.com",
-                            EmailConfirmed = true,
-                        };
-                        var result = userMgr.CreateAsync(alice, "5046859Lipl!").Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
+                             admin = new AppUser
+                            {
+                                UserName = "admin",
+                                Email = "admin@email.com",
+                                EmailConfirmed = true
+                            };
+                            var result = userMgr.CreateAsync(admin, "5046859Lipl!").Result;
+                            if (!result.Succeeded)
+                            {
+                                throw new Exception(result.Errors.First().Description);
+                            }
 
-                        result = userMgr.AddClaimsAsync(alice, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Alice Smith"),
-                            new Claim(JwtClaimTypes.GivenName, "Alice"),
-                            new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                            new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
-                        }).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-                        Log.Debug("alice created");
-                    }
-                    else
-                    {
-                        Log.Debug("alice already exists");
-                    }
-
-                    var bob = userMgr.FindByNameAsync("bob").Result;
-                    if (bob == null)
-                    {
-                        bob = new AppUser
-                        {
-                            UserName = "bob",
-                            Email = "BobSmith@email.com",
-                            EmailConfirmed = true
-                        };
-                        var result = userMgr.CreateAsync(bob, "5046859Lipl!").Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-
-                        result = userMgr.AddClaimsAsync(bob, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Bob Smith"),
-                            new Claim(JwtClaimTypes.GivenName, "Bob"),
-                            new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                            new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
+                            result =  userMgr.AddClaimsAsync(admin, new Claim[]{
+                            new Claim(JwtClaimTypes.Name, "admin"),
+                            new Claim(JwtClaimTypes.GivenName, "Anton"),
+                            new Claim(JwtClaimTypes.FamilyName, "Liplianin"),
+                            new Claim(JwtClaimTypes.WebSite, "http://admin.com"),
+                            new Claim(JwtClaimTypes.Role, "Admin"),
+                            new Claim(JwtClaimTypes.PhoneNumber, "295046859"),
                             new Claim("location", "somewhere")
                         }).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
+                            if (!result.Succeeded)
+                            {
+                                throw new Exception(result.Errors.First().Description);
+                            }
+                            
+                            Log.Debug("admin created");
                         }
-                        Log.Debug("bob created");
+                        else
+                        {
+                            Log.Debug("admin already exists");
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Log.Debug("bob already exists");
-                    }
+                        Console.WriteLine(ex.Message);
+                    };
+
                 }
             }
         }

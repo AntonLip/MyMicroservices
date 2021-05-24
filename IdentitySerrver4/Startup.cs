@@ -36,9 +36,7 @@ namespace IdentitySerrver4
             Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
             var connectionString = Configuration["ConnectionStrings:connectionStringIS4"];
-            //@"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4;trusted_connection=yes;";
             var connectionStringUser = Configuration["ConnectionStrings:connectionStringUser"];
-            //@"Data Source=(LocalDb)\MSSQLLocalDB;database=MyIdentityServer4Users;trusted_connection=yes;";
 
             services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(connectionStringUser)

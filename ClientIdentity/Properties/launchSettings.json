@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ClientIdentity": {
+      "commandName": "Project",
+      "commandLineArgs": "seed"
+    }
+  }
+}

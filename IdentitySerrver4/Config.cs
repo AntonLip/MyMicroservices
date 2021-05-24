@@ -4,9 +4,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace IdentitySerrver4
 {
@@ -50,7 +48,8 @@ namespace IdentitySerrver4
         new List<ApiScope>
         {
             new ApiScope("api1", "My API"),
-            new ApiScope("api2", "Their Api")
+            new ApiScope("TimetibleService.read", "TimetibleService.read"),
+            new ApiScope("TimetibleService.write", "TimetibleService.write"),
         };
 
         public static IEnumerable<ApiResource> ApiResources =>
@@ -59,6 +58,11 @@ namespace IdentitySerrver4
                 new ApiResource("api1", "My API")
                 {
                    
+                },
+                new ApiResource("TimetibleService", "TimetibleService")
+                {
+                    Description = "Get or set infomation about timetable",
+                    
                 }
             };
 
@@ -78,34 +82,7 @@ namespace IdentitySerrver4
                         new Claim(JwtClaimTypes.Email, "AliceSmith@email.com")
                     },
 
-            },
-                new TestUser
-            {
-                SubjectId = "3",
-                Username = "Липлянин",
-                Password = "Липлянин",
-                Claims =
-                    {
-                        new Claim(JwtClaimTypes.Name, "Антон Липлянин"),
-                        new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
-                        new Claim(JwtClaimTypes.MayAct, "read"),
-                        new Claim(JwtClaimTypes.Role, "Admin")
-
-                    },
-
-            },
-                new TestUser
-                {
-                    SubjectId = "11",
-                    Username = "bob",
-                    Password = "bob",
-                    Claims =
-                    {
-                        new Claim(JwtClaimTypes.Name, "Bob Smith"),
-                        new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
-                        new Claim(JwtClaimTypes.Scope, "read")
-                    }
-                }
+            }
             };
 
         }
