@@ -33,13 +33,10 @@ namespace IdentitySerrver4
         public void ConfigureServices(IServiceCollection services)
         {
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
-
-            var connectionString = Configuration["ConnectionStrings:connectionStringIS4"];
-            var connectionStringUser = Configuration["ConnectionStrings:connectionStringUser"];
+            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;            
 
             services.AddDbContext<AppDBContext>(options =>
-                options.UseSqlServer(connectionStringUser)
+                options.UseSqlServer(GetConnectionString(Configuration, "Users"))
              );
 
             services.AddIdentity<AppUser, IdentityRole>()
@@ -54,12 +51,7 @@ namespace IdentitySerrver4
                 {
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
-                    policy.WithOrigins("http://localhost:3000",
-                                       "http://k41.Kafedra41.local",
-                                       "http://k41.Kafedra41.local:90",
-                                       "http://192.168.7.2:3000",
-                                       "http://192.168.7.32:3000",
-                                       "http://192.168.7.2");
+                    policy.SetIsOriginAllowed(origin => true);
                     policy.AllowCredentials();
                 });
             });
@@ -83,12 +75,12 @@ namespace IdentitySerrver4
                 .AddInMemoryPersistedGrants()
                 .AddConfigurationStore(options =>
                 {
-                    options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                    options.ConfigureDbContext = b => b.UseSqlServer(GetConnectionString(Configuration, "IS4"),
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
               .AddOperationalStore(options =>
               {
-                  options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                  options.ConfigureDbContext = b => b.UseSqlServer(GetConnectionString(Configuration, "IS4"),
                       sql => sql.MigrationsAssembly(migrationsAssembly));
               })
               .AddAspNetIdentity<AppUser>();
@@ -155,5 +147,22 @@ namespace IdentitySerrver4
 
             }
         }
+
+        private static string GetConnectionString(IConfiguration configuration, string dbName)
+        {
+            bool isHome = bool.Parse(configuration["Place:IsHome"]);
+            if (isHome)
+            {
+                return configuration["ConnectionString:Str"];
+            }
+            var dbServer = configuration["DbSettings:DbServer"];
+            var dbPort = configuration["DbSettings:DbPort"];
+            var dbUser = configuration["DbSettings:DbUser"];
+            var dbPassword = configuration["DbSettings:DbPassword"];
+            var database = dbName;
+            return $"Server={dbServer},{dbPort};Database={database};User Id={dbUser};Password={dbPassword};";
+        }
+
+
     }
 }
